@@ -55,12 +55,6 @@ cursor.execute(
 cursor.execute(
     '''INSERT INTO Banestrekning VALUES ('5','Rørosbanen', 'Diesel')''')
 
-# Creates table togrute
-cursor.execute('''CREATE TABLE Togrute
-  ("TogruteNavn"	TEXT NOT NULL PRIMARY KEY,
-	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID))''')
-"""
-
 # Creates table Stasjon
 cursor.execute('''CREATE TABLE Stasjon
     ("StasjonNavn"	TEXT NOT NULL PRIMARY KEY,
@@ -88,7 +82,19 @@ cursor.execute('''INSERT INTO Delstrekning VALUES (3, 90, 0, 1, 'Mosjøen', 'Mo 
 cursor.execute('''INSERT INTO Delstrekning VALUES (4, 170, 0, 1, 'Mo i Rana', 'Fauske')''')
 cursor.execute('''INSERT INTO Delstrekning VALUES (5, 60, 0, 1, 'Fauske', 'Bodø')''')
 
+# Creates table togrute
+cursor.execute('''CREATE TABLE Togrute
+  ("TogruteNavn"	TEXT NOT NULL PRIMARY KEY,
+    "Avgangstid" DATETIME NOT NULL,
+    "Ankomststid" DATETIME NOT NULL,
+    "Startstasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
+    "Endestasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn))''')
 
+    """
+
+cursor.execute('''UPDATE Togrute 
+                    SET('2023-14-03 7:49:00' = '7:49:00', '2023-14-03 9:49:00' = '17:34:00')
+                    WHERE TogruteNavn = 'dagtog' ''')
 
 cursor.connection.commit()
 
