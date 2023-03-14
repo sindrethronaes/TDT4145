@@ -1,7 +1,11 @@
+-- Sletter DB
+
+DROP TABLE {Stasjon, DelstrekningIHovedretning, Togrute, TogruterPåBanestrekning, Operatører, Datoer, AntallVogntyper, Banestrekning, DelstrekningID, Vogn, Sovevogn, Sittevogn, Kunde, KundeOrdre, BillettISittevogn, BillettISovevogn, Rutestopp, Ordre, DatoerForTogruter}
+
+-- Lager DB
 CREATE TABLE "Stasjon" (
 	"StasjonNavn"	TEXT NOT NULL PRIMARY KEY,
 	"Moh."	INT NOT NULL
-
 );
 
 CREATE TABLE "DelstrekningIHovedretning" (
