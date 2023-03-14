@@ -10,19 +10,10 @@ def searchRoute(start_Station, end_Station, date, time):
 
 def populateDB():
   
-  # Resetter tabellen
+  # Resetter alle tabeller i DB
   cursor.execute('''DELETE FROM Banestrekning''')
-  cursor.connection.commit()
-
-  # Resetter tabellen
   cursor.execute('''DELETE FROM Stasjon''')
-  cursor.connection.commit()
-
-  # Resetter tabellen
   cursor.execute('''DELETE FROM Delstrekning''')
-  cursor.connection.commit()
-
-  # Resets Table
   cursor.execute('''DELETE FROM Togrute''')
   cursor.connection.commit() 
 
