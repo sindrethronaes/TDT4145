@@ -27,8 +27,7 @@ CREATE TABLE "TogruterPåBanestrekning" (
 
 CREATE TABLE "Operatører" (
 	"OperatørerNavn"	TEXT NOT NULL PRIMARY KEY,
-	"Banestrekning"	TEXT NOT NULL,
-	FOREIGN KEY(Banestrekning)REFERENCES TogruterPåBanestrekning(Banestrekning)
+	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning),
 	);
 
 CREATE TABLE "Datoer" (
@@ -39,10 +38,9 @@ CREATE TABLE "Datoer" (
 CREATE TABLE "AntallVogntyper" (
 	"OperatørerNavn" PRIMARY KEY,
 	AntallVogntyper INT NOT NULL
-
 	);
 
-CREATE TABLE "BanestrekningInfo" (
+CREATE TABLE "Banestrekning" (
 	"BanestrekningID" TEXT NOT NULL PRIMARY KEY,
 	"BanestrekningNavn"	TEXT NOT NULL,
 	"Fremdriftsenergi" TEXT NOT NULL
