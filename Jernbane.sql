@@ -1,9 +1,25 @@
--- Sletter DB
-
-DROP TABLE {Stasjon, DelstrekningIHovedretning, Togrute, TogruterPåBanestrekning, Operatører, Datoer, AntallVogntyper, Banestrekning, DelstrekningID, Vogn, Sovevogn, Sittevogn, Kunde, KundeOrdre, BillettISittevogn, BillettISovevogn, Rutestopp, Ordre, DatoerForTogruter}
+-- Sletter DB hvis den eksisterer
+DROP TABLE IF EXISTS TogruterPåBanestrekning;
+DROP TABLE IF EXISTS Operatør;
+DROP TABLE IF EXISTS AntallVogntyper;
+DROP TABLE IF EXISTS Vogn;
+DROP TABLE IF EXISTS Sovevogn;
+DROP TABLE IF EXISTS Sittevogn;
+DROP TABLE IF EXISTS BillettISovevogn;
+DROP TABLE IF EXISTS BillettISittevogn;
+DROP TABLE IF EXISTS KundeOrdre;
+DROP TABLE IF EXISTS Ordre;
+DROP TABLE IF EXISTS Rutestopp;
+DROP TABLE IF EXISTS DatoerForTogruter;
+DROP TABLE IF EXISTS Kunde;
+DROP TABLE IF EXISTS Delstrekning;
+DROP TABLE IF EXISTS Banestrekning;
+DROP TABLE IF EXISTS Dato;
+DROP TABLE IF EXISTS Togrute;
+DROP TABLE IF EXISTS DelstrekningIHovedretning;
+DROP TABLE IF EXISTS Stasjon;
 
 -- Lager DB
-
 CREATE TABLE Stasjon (
 	"StasjonNavn"	TEXT NOT NULL PRIMARY KEY,
 	"Moh."	INT NOT NULL
@@ -20,38 +36,37 @@ CREATE TABLE Togrute (
 	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID)
 );
 
-
 CREATE TABLE TogruterPåBanestrekning (
 	"Banestrekning"	TEXT PRIMARY KEY,
 	"TogruteNavn"	TEXT NOT NULL REFERENCES Togrute(TogruteNavn)
-	);
+);
 
 CREATE TABLE Operatør (
 	"OperatørNavn"	TEXT PRIMARY KEY,
-	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning),
-	);
+	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning)
+);
 
 CREATE TABLE Dato (
 	"Dato" DATE NOT NULL PRIMARY KEY,
 	"Ukedag" TEXT NOT NULL
-	);
+);
 
 CREATE TABLE AntallVogntyper (
-	"OperatørNavn" PRIMARY KEY REFERENCES Operatør(OperatørNavn),
+	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
-	);
+);
 
 CREATE TABLE Banestrekning (
 	"BanestrekningID" TEXT NOT NULL PRIMARY KEY,
 	"BanestrekningNavn"	TEXT NOT NULL,
 	"Fremdriftsenergi" TEXT NOT NULL
-	);
+);
 
-CREATE TABLE Deltrekning (
+CREATE TABLE Delstrekning (
 	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
 	"LengdeIkm"	INT NOT NULL,
 	"HarDobbbeltspor" TEXT NOT NULL
-	);
+);
 
 CREATE TABLE Vogn (
 	"VognID" TEXT NOT NULL PRIMARY KEY,
@@ -59,62 +74,57 @@ CREATE TABLE Vogn (
 	"TilgjengeligForBruk" TEXT NOT NULL,
 	"NummerIVognsammensetning" INT NOT NULL,
 	"VognType" TEXT NOT NULL,
-	"OperatørerNavn" TEXT NOT NULL REFERENCES Operatør(OperatørerNavn)
-	);
+	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn)
+);
 
 CREATE TABLE Sovevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
 	"Seng"	TEXT NOT NULL
-	);
+);
 
 CREATE TABLE Sittevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
 	"Sete"	TEXT NOT NULL
-	);
-
+);
 
 CREATE TABLE Kunde (
 	"KundeID" TEXT PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
 	"Epost" TEXT NOT NULL,
 	"Nummer" INT NOT NULL
-	);
+);
 
 CREATE TABLE KundeOrdre (
 	"OrdreID" TEXT NOT NULL PRIMARY KEY,
 	"Dato"	DATE NOT NULL,
 	"TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
 	"KundeID" TEXT NOT NULL REFERENCES Kunde(KundeID)
-	);
+);
 
 CREATE TABLE BillettISittevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
 	"Sete" TEXT NOT NULL REFERENCES Sittevogn(Sete)
-	);
+);
 
 CREATE TABLE BillettISovevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
 	"Seng" TEXT NOT NULL REFERENCES Sovevogn(Seng)
-	);
-
-
+);
 
 CREATE TABLE Rutestopp (
-	"TogruteNavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
-	"StasjonNavn" TEXT PRIMARY KEY REFERENCES Stasjon(StasjonNavn),
-	"Avgang" time NOT NULL,
-	"Ankomst" time NOT NULL,
-	);
-
+    "TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
+    "StasjonNavn" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
+    "Avgang" TIME,
+    "Ankomst" TIME,
+    PRIMARY KEY ("TogruteNavn", "StasjonNavn")
+);
 
 CREATE TABLE Ordre (
 	"OrdreID" TEXT PRIMARY KEY,
 	"BillettID" TEXT NOT NULL
-	);
-
+);
 
 CREATE TABLE DatoerForTogruter (
 	"Togrutenavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
 	"Dato" DATE NOT NULL REFERENCES Dato(Dato)
-	);
-
+);
