@@ -8,8 +8,6 @@ def initDB():
     with open('Jernbane.sql', 'r') as f:
         sql_script = f.read()
 
-    print(sql_script)
-
     con.executescript(sql_script)
 
     con.commit()

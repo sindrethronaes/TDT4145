@@ -67,3 +67,42 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
     con.close()
 
     return filtered_train_routes
+
+def search_routes(start_station, end_station, date, time):
+    conn = sqlite3.connect('TogDB.db')
+    c = conn.cursor()
+
+    # Construct the SQL query to join the Togrute and Rutestopp tables
+    # to get all routes between the start and end stations
+    query = """
+        SELECT r.TogruteNavn, rs.Avgang, rs.Ankomst
+        FROM Togrute r
+        JOIN Rutestopp rs ON r.TogruteNavn = rs.TogruteNavn
+        WHERE rs.StasjonNavn = ? AND r.TogruteNavn IN
+            (SELECT TogruteNavn
+             FROM Rutestopp
+             WHERE StasjonNavn = ?)
+    """
+
+    # Execute the SQL query with the start and end stations as inputs
+    c.execute(query, (start_station, end_station))
+  
+    # Get all the results and filter by date and time
+    routes = []
+    for row in c.fetchall():
+        togrute_navn, avgang, ankomst = row
+        if date in get_dates_for_togrute(togrute_navn) and avgang >= time:
+            routes.append((togrute_navn, avgang, ankomst))
+
+    # Sort the routes by time
+    sorted_routes = sorted(routes, key=lambda x: x[1])
+
+    def get_dates_for_togrute(cursor, togrute_navn):
+      cursor.execute("SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
+      dates = [row[0] for row in cursor.fetchall()]
+      return dates
+
+
+    conn.close()
+
+    return sorted_routes
