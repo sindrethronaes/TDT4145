@@ -1,5 +1,6 @@
 import sqlite3
-from core import populateDB
+from inputFunctions import get_station_name, get_weekday
+from core import get_train_routes_for_station_on_weekday, populateDB
 
 # Creates a connection to out database
 con = sqlite3.connect("TogDB.db")
@@ -43,9 +44,20 @@ print("All rows from table Banestrekning:")
 print(banestrekningrows)
 
 cursor.execute("SELECT * FROM Togrute")
-togruterows = cursor.fetchmany(1)
+togruterows = cursor.fetchall()
 print("All rows from table Togrute:")
 print(togruterows)
+
+
+station_name = get_station_name()
+weekday = get_weekday()
+# call function to get routes
+routes = get_train_routes_for_station_on_weekday(station_name, weekday)
+
+# print results
+print(f"\nThe following routes stop at {station_name} on weekday number {weekday}:")
+for route in routes:
+    print(f"Route {route[0]} from {route[1]} to {route[2]}")
 
 #Save changes to database
 con.commit()

@@ -8,9 +8,6 @@ cursor = con.cursor()
 # Read SQL script from file
 initDB()
 
-def searchRoute(start_Station, end_Station, date, time):
-    return None
-
 def populateDB():
   
   # Resetter alle tabeller i DB
@@ -43,5 +40,30 @@ def populateDB():
 
   # commit changes
   con.commit()
-        
-  
+
+def get_train_routes_for_station_on_weekday(station_name, weekday):
+    con = sqlite3.connect("TogDB.db")
+    cur = con.cursor()
+
+    # get all train routes for the station
+    cur.execute("""
+        SELECT TogruteNavn
+        FROM Rutestopp
+        WHERE StasjonNavn = ?
+    """, (station_name,))
+    train_routes = cur.fetchall()
+
+    # filter train routes by weekday
+    filtered_train_routes = []
+    for route in train_routes:
+        cur.execute("""
+            SELECT *
+            FROM DatoerForTogruter
+            WHERE Togrutenavn = ? AND strftime('%w', Dato) = ?
+        """, (route[0], str(weekday)))
+        if cur.fetchone():
+            filtered_train_routes.append(route[0])
+
+    con.close()
+
+    return filtered_train_routes
