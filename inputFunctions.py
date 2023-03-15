@@ -1,5 +1,3 @@
-import sqlite3
-
 def get_station_name():
     station_name = input("Enter station name: ")
     return station_name
