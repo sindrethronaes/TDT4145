@@ -102,8 +102,8 @@ CREATE TABLE BillettISovevogn (
 CREATE TABLE Rutestopp (
 	"TogruteNavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
 	"StasjonNavn" TEXT PRIMARY KEY REFERENCES Stasjon(StasjonNavn),
-	"Avgang" time NOT NULL,
-	"Ankomst" time NOT NULL,
+	"Avgang" TIME,
+	"Ankomst" TIME,
 	);
 
 
