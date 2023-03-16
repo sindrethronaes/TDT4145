@@ -112,12 +112,21 @@ CREATE TABLE BillettISovevogn (
 );
 
 CREATE TABLE Rutestopp (
+<<<<<<< Jernbane.sql
+	"TogruteNavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
+	"StasjonNavn" TEXT PRIMARY KEY REFERENCES Stasjon(StasjonNavn),
+	"Avgang" TIME,
+	"Ankomst" TIME,
+	);
+
+=======
     "TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
     "StasjonNavn" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
     "Avgang" TIME,
     "Ankomst" TIME,
     PRIMARY KEY ("TogruteNavn", "StasjonNavn")
 );
+>>>>>>> Jernbane.sql
 
 CREATE TABLE Ordre (
 	"OrdreID" TEXT PRIMARY KEY,
