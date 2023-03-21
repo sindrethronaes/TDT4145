@@ -1,5 +1,7 @@
 import sqlite3
+from prettytable import PrettyTable
 from initDB import initDB
+from inputFunctions import start_station, end_station, date, time
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -9,39 +11,44 @@ cursor = con.cursor()
 initDB()
 
 def populateDB():
-  
-  # Resetter alle tabeller i DB
-  cursor.execute("DELETE FROM Banestrekning")
-  cursor.execute("DELETE FROM Stasjon")
-  cursor.execute("DELETE FROM Delstrekning")
-  cursor.execute("DELETE FROM Togrute")
-  con.commit() 
 
-  # Setter inn informasjon om Banestrekninger
-  cursor.execute("INSERT INTO Banestrekning VALUES (2, 'Dovrebanen', 'Elektrisk')")
-  cursor.execute("INSERT INTO Banestrekning VALUES (3, 'Bergensbanen', 'Elekstrisk')")
-  cursor.execute("INSERT INTO Banestrekning VALUES (4,'Sørlandsbanen', 'Diesel')")
-  cursor.execute("INSERT INTO Banestrekning VALUES (5,'Rørosbanen', 'Diesel')")
+    # Reset the database
+    cursor.execute("DELETE FROM Banestrekning")
+    cursor.execute("DELETE FROM Stasjon")
+    cursor.execute("DELETE FROM Delstrekning")
+    cursor.execute("DELETE FROM Togrute")
+    con.commit()
 
-  # Setter inn informasjon om Stasjoner
-  cursor.execute("INSERT INTO Stasjon VALUES ('Trondheim', 5.1)")
-  cursor.execute("INSERT INTO Stasjon VALUES ('Steinskjer', 3.6)")
-  cursor.execute("INSERT INTO Stasjon VALUES ('Mosjøen', 6.8)")
-  cursor.execute("INSERT INTO Stasjon VALUES ('Mo i Rana', 3.5)")
-  cursor.execute("INSERT INTO Stasjon VALUES ('Fauske', 34.0)")
-  cursor.execute("INSERT INTO Stasjon VALUES ('Bodø', 4.1)")
+    # Insert information about Banestrekninger
+    cursor.execute(
+        "INSERT INTO Banestrekning VALUES (2, 'Dovrebanen', 'Elektrisk')")
+    cursor.execute(
+        "INSERT INTO Banestrekning VALUES (3, 'Bergensbanen', 'Elekstrisk')")
+    cursor.execute(
+        "INSERT INTO Banestrekning VALUES (4,'Sørlandsbanen', 'Diesel')")
+    cursor.execute(
+        "INSERT INTO Banestrekning VALUES (5,'Rørosbanen', 'Diesel')")
 
-  # Setter inn informasjon om Delstrekninger
-  cursor.execute("INSERT INTO Delstrekning VALUES (1, 120, TRUE)")
-  cursor.execute("INSERT INTO Delstrekning VALUES (2, 280, FALSE)")
-  cursor.execute("INSERT INTO Delstrekning VALUES (3, 90, FALSE)")
-  cursor.execute("INSERT INTO Delstrekning VALUES (4, 170, FALSE)")
-  cursor.execute("INSERT INTO Delstrekning VALUES (5, 60, FALSE)")
+    # Insert information about Stasjoner
+    cursor.execute("INSERT INTO Stasjon VALUES ('Trondheim', 5.1)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Steinskjer', 3.6)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Mosjøen', 6.8)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Mo i Rana', 3.5)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Fauske', 34.0)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Bodø', 4.1)")
 
-  # commit changes
-  con.commit()
+    # Insert information about Delstrekninger
+    cursor.execute("INSERT INTO Delstrekning VALUES (1, 120, TRUE)")
+    cursor.execute("INSERT INTO Delstrekning VALUES (2, 280, FALSE)")
+    cursor.execute("INSERT INTO Delstrekning VALUES (3, 90, FALSE)")
+    cursor.execute("INSERT INTO Delstrekning VALUES (4, 170, FALSE)")
+    cursor.execute("INSERT INTO Delstrekning VALUES (5, 60, FALSE)")
 
-def get_train_routes_for_station_on_weekday(station_name, weekday):
+    # commit changes
+    con.commit()
+
+
+def get_train_routes_for_station_on_weekday(StasjonNavn, Ukedag):
     con = sqlite3.connect("TogDB.db")
     cur = con.cursor()
 
@@ -50,7 +57,7 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
         SELECT TogruteNavn
         FROM Rutestopp
         WHERE StasjonNavn = ?
-    """, (station_name,))
+    """, (StasjonNavn,))
     train_routes = cur.fetchall()
 
     # filter train routes by weekday
@@ -60,13 +67,14 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
             SELECT *
             FROM DatoerForTogruter
             WHERE Togrutenavn = ? AND strftime('%w', Dato) = ?
-        """, (route[0], str(weekday)))
+        """, (route[0], str(Ukedag)))
         if cur.fetchone():
             filtered_train_routes.append(route[0])
 
     con.close()
 
     return filtered_train_routes
+
 
 def search_routes(start_station, end_station, date, time):
     conn = sqlite3.connect('TogDB.db')
@@ -84,25 +92,42 @@ def search_routes(start_station, end_station, date, time):
              WHERE StasjonNavn = ?)
     """
 
-    # Execute the SQL query with the start and end stations as inputs
-    c.execute(query, (start_station, end_station))
-  
+    def get_dates_for_togrute(cursor, togrute_navn):
+        cursor.execute(
+            "SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
+        dates = [row[0] for row in cursor.fetchall()]
+        return dates
+
     # Get all the results and filter by date and time
     routes = []
-    for row in c.fetchall():
+    for row in c.execute(query, (start_station, end_station)):
         togrute_navn, avgang, ankomst = row
-        if date in get_dates_for_togrute(togrute_navn) and avgang >= time:
+        if date in get_dates_for_togrute(c, togrute_navn) and avgang >= time:
             routes.append((togrute_navn, avgang, ankomst))
 
     # Sort the routes by time
     sorted_routes = sorted(routes, key=lambda x: x[1])
 
-    def get_dates_for_togrute(cursor, togrute_navn):
-      cursor.execute("SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
-      dates = [row[0] for row in cursor.fetchall()]
-      return dates
-
-
     conn.close()
 
+    # Print the results in a table format
+    if sorted_routes:
+        table = PrettyTable()
+        table.field_names = ['Train Route', 'Departure Time', 'Arrival Time']
+        for route in sorted_routes:
+            table.add_row(route)
+        print(table)
+    else:
+        print("No routes found.")
+
     return sorted_routes
+
+
+def search_routes_menu():
+    print("\nSearch Routes")
+    start = start_station()
+    end = end_station()
+    d = date()
+    t = time()
+    routes = search_routes(start, end, d, t)
+    return routes
