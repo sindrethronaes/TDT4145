@@ -310,3 +310,4 @@ def check_user_story_b():
 
 
 def check_user_story_f():
+    pass
