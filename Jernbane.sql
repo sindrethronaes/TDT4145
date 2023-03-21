@@ -1,6 +1,6 @@
 -- Sletter DB hvis den eksisterer
-DROP TABLE IF EXISTS TogruterPåBanestrekning;
-DROP TABLE IF EXISTS Operatør;
+DROP TABLE IF EXISTS TogruterPaaBanestrekning;
+DROP TABLE IF EXISTS Operatoer;
 DROP TABLE IF EXISTS AntallVogntyper;
 DROP TABLE IF EXISTS Vogn;
 DROP TABLE IF EXISTS Sovevogn;
@@ -37,15 +37,15 @@ CREATE TABLE Togrute (
 
 );
 
-CREATE TABLE TogruterPåBanestrekning (
+CREATE TABLE TogruterPaaBanestrekning (
 	"Banestrekning"	TEXT PRIMARY KEY,
 	"TogruteNavn"	TEXT NOT NULL REFERENCES Togrute(TogruteNavn)
 );
 
 
-CREATE TABLE Operatør (
-	"OperatørNavn"	TEXT PRIMARY KEY,
-	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning)
+CREATE TABLE Operatoer (
+	"OperatoerNavn"	TEXT PRIMARY KEY,
+	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPaaBanestrekning(Banestrekning)
 );
 
 
@@ -56,7 +56,7 @@ CREATE TABLE Dato (
 
 
 CREATE TABLE AntallVogntyper (
-	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
+	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
 );
 
@@ -79,7 +79,7 @@ CREATE TABLE Vogn (
 	"TilgjengeligForBruk" TEXT NOT NULL,
 	"NummerIVognsammensetning" INT NOT NULL,
 	"VognType" TEXT NOT NULL,
-	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn)
+	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
 );
 
 
