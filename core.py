@@ -1,6 +1,6 @@
 import sqlite3
 from initDB import initDB
-
+from inputFunctions import get_station_name, get_weekday, get_name, get_e_mail, get_phone_number
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
 # Creates a connecting object to our database
@@ -68,6 +68,21 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
 
     return filtered_train_routes
 
+
+def register_user():
+    con = sqlite3.connect("TogDB.db")
+    cursor = con.cursor()
+    print("\n Register as a user")
+    cursor.execute("SELECT COUNT(*) from Kunde")
+    KundeID=cursor.fetchone()[0]+1
+    cursor.execute(""" 
+    INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
+    VALUES (?,?,?,?)      
+    """, (KundeID, get_name(), get_e_mail(), get_phone_number()))
+    con.commit()
+    print("new user added")
+    con.close
+
 def search_routes(start_station, end_station, date, time):
     conn = sqlite3.connect('TogDB.db')
     c = conn.cursor()
@@ -101,6 +116,7 @@ def search_routes(start_station, end_station, date, time):
       cursor.execute("SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
       dates = [row[0] for row in cursor.fetchall()]
       return dates
+
 
 
     conn.close()
