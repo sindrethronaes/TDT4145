@@ -1,4 +1,4 @@
--- Sletter DB hvis den eksisterer
+-- Deletes DB if it alreadt exists
 DROP TABLE IF EXISTS TogruterPåBanestrekning;
 DROP TABLE IF EXISTS Operatør;
 DROP TABLE IF EXISTS AntallVogntyper;
@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS Togrute;
 DROP TABLE IF EXISTS DelstrekningIHovedretning;
 DROP TABLE IF EXISTS Stasjon;
 
--- Lager DB
+-- Creates DB
 CREATE TABLE Stasjon (
 	"StasjonNavn"	TEXT NOT NULL PRIMARY KEY,
 	"Moh."	INT NOT NULL
