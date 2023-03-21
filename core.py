@@ -1,7 +1,7 @@
 import sqlite3
 from prettytable import PrettyTable
 from initDB import initDB
-from inputFunctions import start_station, end_station, date, time
+from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -131,3 +131,18 @@ def search_routes_menu():
     t = time()
     routes = search_routes(start, end, d, t)
     return routes
+
+
+def register_user():
+    con = sqlite3.connect("TogDB.db")
+    cursor = con.cursor()
+    print("\n Register as a user")
+    cursor.execute("SELECT COUNT(*) from Kunde")
+    KundeID=cursor.fetchone()[0]+1
+    cursor.execute(""" 
+    INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
+    VALUES (?,?,?,?)      
+    """, (KundeID, get_name(), get_e_mail(), get_phone_number()))
+    con.commit()
+    print("new user added")
+    con.close

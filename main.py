@@ -1,6 +1,6 @@
 import sqlite3
 from inputFunctions import get_station_name, get_weekday
-from core import get_train_routes_for_station_on_weekday, populateDB, search_routes_menu
+from core import get_train_routes_for_station_on_weekday, populateDB, search_routes_menu, register_user
 
 # Creates a connection to out database
 con = sqlite3.connect("TogDB.db")
