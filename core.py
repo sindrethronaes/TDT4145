@@ -96,6 +96,15 @@ def populateDB():
     cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Steinkjer', '12:31', '12:31')")
     cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Trondheim S', 'NULL', '14:13')")
 
+    # USER STORY f)
+    cursor.execute(
+        "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('VY AS', 'Nordlandsbanen')")
+    cursor.execute(
+        "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('SJ Norge AS', 'Nordlandsbanen')")
+    cursor.execute(
+        "INSERT INTO "
+    )
+
     # Commit the changes aka "Saves" the DB-State
     con.commit()
 
