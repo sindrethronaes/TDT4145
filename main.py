@@ -1,4 +1,5 @@
 import sqlite3
+from prettytable import PrettyTable
 from inputFunctions import get_station_name, get_weekday
 from core import get_train_routes_for_station_on_weekday, populateDB, search_routes_menu, register_user
 
@@ -63,6 +64,27 @@ for route in routes:
     print(f"Route {route[0]} from {route[1]} to {route[2]}")
 
 search_routes_menu()
+
+# Run python main.py purchases <customer_id> in the terminal to see the upcoming purchases for a customer
+def get_user_purchases(customer_id):
+    with sqlite3.connect("TogDB.db") as conn:
+        c = conn.cursor()
+        c.execute("""SELECT t.date, r.name, t.departure_time, t.arrival_time, t.price
+                     FROM purchases p
+                     JOIN tickets t ON t.id = p.ticket_id
+                     JOIN routes r ON r.id = t.route_id
+                     WHERE p.customer_id = ?
+                     AND t.departure_time > datetime('now')
+                     ORDER BY t.departure_time ASC""", (customer_id,))
+        rows = c.fetchall()
+        if not rows:
+            print("No upcoming purchases found for customer", customer_id)
+            return
+        table = PrettyTable(['Date', 'Route', 'Departure Time', 'Arrival Time', 'Price'])
+        table.align['Route'] = 'l'
+        for row in rows:
+            table.add_row(row)
+        print(table)
 
 #Save changes to database
 con.commit()
