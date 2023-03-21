@@ -23,6 +23,9 @@ def populateDB():
     con.commit()
 
     # USER STORY a)
+    cursor.execute(
+        "INSERT INTO Banestrekning VALUES (1, 'Nordlandsbanen', 'Diesel')")
+
     # Inserts information regarding Banestrekninger
     cursor.execute(
         "INSERT INTO Banestrekning VALUES (2, 'Dovrebanen', 'Elektrisk')")
@@ -47,10 +50,6 @@ def populateDB():
     cursor.execute("INSERT INTO Delstrekning VALUES (3, 90, FALSE)")
     cursor.execute("INSERT INTO Delstrekning VALUES (4, 170, FALSE)")
     cursor.execute("INSERT INTO Delstrekning VALUES (5, 60, FALSE)")
-
-    # Insert data for Nordlandsbanen into Banestrekning
-    cursor.execute(
-        "INSERT INTO Banestrekning (BanestrekningID, BanestrekningNavn, Fremdriftsenergi) VALUES (1, 'Nordlandsbanen', 'Diesel')")
 
     # USER STORY b)
     # Insert data for day train from Trondheim to Bodø into Togrute and Rutestopp
