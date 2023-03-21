@@ -29,7 +29,6 @@ CREATE TABLE DelstrekningIHovedretning (
 	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
 	"Startstasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
 	"Endestasjon" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn)
-	
 );
 
 CREATE TABLE Togrute (
@@ -137,5 +136,3 @@ CREATE TABLE DatoerForTogruter (
 	"Togrutenavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
 	"Dato" DATE NOT NULL REFERENCES Dato(Dato)
 );
-
-
