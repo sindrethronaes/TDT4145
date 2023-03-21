@@ -46,6 +46,8 @@ def search_routes_menu():
             print(
                 f"- Train route: {route[0]}, Departure time: {route[1]}, Arrival time: {route[2]}")
 
+# Used to test user story f)
+check_user_story_f()
 
 # Save changes to database
 con.commit()

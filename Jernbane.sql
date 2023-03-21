@@ -26,7 +26,7 @@ CREATE TABLE Stasjon (
 );
 
 CREATE TABLE DelstrekningIHovedretning (
-	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
+	"DelstrekningID" TEXT PRIMARY KEY REFERENCES Delstrekning(DelstrekningID),
 	"Startstasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
 	"Endestasjon" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn)
 );
@@ -38,8 +38,9 @@ CREATE TABLE Togrute (
 );
 
 CREATE TABLE TogruterPåBanestrekning (
-	"Banestrekning"	TEXT PRIMARY KEY,
-	"TogruteNavn"	TEXT NOT NULL REFERENCES Togrute(TogruteNavn)
+	"Banestrekning"	TEXT REFERENCES Banestrekning(BanestrekningID),
+	"TogruteNavn"	TEXT REFERENCES Togrute(TogruteNavn),
+	PRIMARY KEY ("Banestrekning", "TogruteNavn")
 );
 
 
@@ -56,7 +57,7 @@ CREATE TABLE Dato (
 
 
 CREATE TABLE AntallVogntyper (
-	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
+	"OperatørNavn" TEXT REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
 );
 
@@ -77,7 +78,7 @@ CREATE TABLE Vogn (
 	"VognID" TEXT NOT NULL PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
 	"TilgjengeligForBruk" TEXT NOT NULL,
-	"NummerIVognsammensetning" INT NOT NULL,
+	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn)
 );
@@ -85,15 +86,55 @@ CREATE TABLE Vogn (
 
 CREATE TABLE Sovevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"Seng"	TEXT NOT NULL
+	"AntallSenger" INT NOT NULL
 );
 
 
 CREATE TABLE Sittevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"Sete"	TEXT NOT NULL
+	"AntallSeter" INT NOT NULL
 );
 
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE Kupe (
+	"KupeID" INT NOT NULL,
+	"VognID" INT REFERENCES Vogn(VognID),
+	"AntallSenger" INT NOT NULL,
+	"Tilgjengelig" TEXT NOT NULL,
+	PRIMARY KEY ("KupeID", "VognID")
+)
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE Seng (
+	"SengID" INT NOT NULL,
+	"Tilgjengelig" TEXT NOT NULL,
+	PRIMARY KEY ("SengID", "KupeID")
+	FOREIGN KEY "KupeID" REFERENCES Kupe(KupeID) 
+)
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE Sete (
+	"SeteID" INT NOT NULL,
+	"Tilgjengelig" TEXT NOT NULL,
+	PRIMARY KEY ("SeteID", "VognID")
+	FOREIGN KEY "VognID" REFERENCES Vogn(VognID)
+)
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE SengIKupe (
+	"SengID" INT NOT NULL REFERENCES Seng(SengID),
+	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
+	"Plassering" TEXT NOT NULL, 
+	PRIMARY KEY ("SengID", "KupeID")
+)
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE SeteIVogn (
+	"SeteID" INT NOT NULL REFERENCES Sete(SeteID),
+	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"Plassering" TEXT NOT NULL,
+	PRIMARY KEY ("SeteID", "VognID")
+)
 
 CREATE TABLE Kunde (
 	"KundeID" TEXT PRIMARY KEY,
@@ -104,19 +145,19 @@ CREATE TABLE Kunde (
 
 CREATE TABLE KundeOrdre (
 	"OrdreID" TEXT NOT NULL PRIMARY KEY,
-	"Dato"	DATE NOT NULL,
+	"Dato"	DATE NOT NULL REFERENCES Dato(Dato),
 	"TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
 	"KundeID" TEXT NOT NULL REFERENCES Kunde(KundeID)
 );
 
 CREATE TABLE BillettISittevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"Sete" TEXT NOT NULL REFERENCES Sittevogn(Sete)
+	"SeteID" TEXT NOT NULL REFERENCES Sete(SeteID)
 );
 
 CREATE TABLE BillettISovevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"Seng" TEXT NOT NULL REFERENCES Sovevogn(Seng)
+	"SengID" TEXT NOT NULL REFERENCES Seng(SengID)
 );
 
 CREATE TABLE Rutestopp (

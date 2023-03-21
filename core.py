@@ -97,13 +97,66 @@ def populateDB():
     cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Trondheim S', 'NULL', '14:13')")
 
     # USER STORY f)
+    # Inserts information regarding Operatører
     cursor.execute(
         "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('VY AS', 'Nordlandsbanen')")
     cursor.execute(
         "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('SJ Norge AS', 'Nordlandsbanen')")
+
+    # Inserts information regarding DelstrekningIHovedretning
     cursor.execute(
-        "INSERT INTO "
-    )
+        "INSERT INTO DelstrekningIHovedretning(DelstrekningID, Startstasjon, Endestasjon) VALUES (1, 'Trondheim', 'Steinkjer')")
+    cursor.execute(
+        "INSERT INTO DelstrekningIHovedretning(DelstrekningID, Startstasjon, Endestasjon) VALUES (2, 'Steinkjer', 'Mosjøen')")
+    cursor.execute(
+        "INSERT INTO DelstrekningIHovedretning(DelstrekningID, Startstasjon, Endestasjon) VALUES (3, 'Mosjøen', 'Mo i Rana')")
+    cursor.execute(
+        "INSERT INTO DelstrekningIHovedretning(DelstrekningID, Startstasjon, Endestasjon) VALUES (4, 'Mo i Rana', 'Fauske')")
+    cursor.execute(
+        "INSERT INTO DelstrekningIHovedretning(DelstrekningID, Startstasjon, Endestasjon) VALUES (5, 'Fauske', 'Bodø')")
+
+    # Inserts information regarding TogruterPåBanestrekning
+    cursor.execute(
+        "INSERT INTO TogruterPåBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'VY AS')")
+    cursor.execute(
+        "INSERT INTO TogruterPåBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'SJ Norge AS')")
+
+    # Inserts information regarding Dato
+    cursor.execute(
+        "INSERT INTO Dato(Dato, Ukedag) VALUES ('2023-04-03', 'Mandag')")
+    cursor.execute(
+        "INSERT INTO Dato(Dato, Ukedag) VALUES ('2023-04-04', 'Tirsdag')")
+
+    # Inserts information regarding Vogn, Sovevogn, Sittevogn (10 of each)
+    for i in range(1, 11):
+        cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sittevogn', 'Ledig', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
+
+    for i in range(11, 21):
+        cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
+
+    # Inserts information regarding seats (12 seats per car)
+    for i in range(1, 11):
+        for j in range(1, 13):
+            cursor.execute(
+                "INSERT INTO Sittevogn(VognID, AntallSeter) VALUES (?, ?)", (i, j))
+
+    # Inserts information regarding beds (8 beds per car)
+    for i in range(11, 21):
+        for j in range(1, 9):
+            cursor.execute(
+                "INSERT INTO Sovevogn(VognID, AntallSenger) VALUES (?, ?)", (i, j))
+
+    # Inserts information regarding Kupe
+    for i in range(11, 21):
+        for j in range(1, 5):
+            cursor.execute(
+                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , 'Ja')", (j, i))
+
+    # Inserts information regarding Seng (8 Beds in total per Kupe)
+    for i in range(1, 5):
+        for j in range(1, 3):
+            cursor.execute(
+                "INSERT INTO Seng(SengID, Tilgjengelig, KupeID) VALUES (?, 'Ja', ?)", (j, i,))
 
     # Commit the changes aka "Saves" the DB-State
     con.commit()
@@ -141,6 +194,7 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
     # Filter train routes by weekday
     filtered_train_routes = []
     for route in train_routes:
+        # NB! IS '%w' GOOD PRATICE REF. #3 in python-sqlite.pdf?
         cur.execute("""
             SELECT *
             FROM DatoerForTogruter
@@ -253,3 +307,6 @@ def check_user_story_b():
     print("All rows from table Togrute:")
     for togrute in togruterows:
         print(togrute)
+
+
+def check_user_story_f():
