@@ -1,6 +1,6 @@
 import sqlite3
-from inputFunctions import get_station_name, get_weekday
-from core import get_train_routes_for_station_on_weekday, populateDB, search_routes
+from inputFunctions import get_station_name, get_weekday,get_name, get_e_mail, get_phone_number
+from core import get_train_routes_for_station_on_weekday, populateDB, search_routes, register_user
 
 # Creates a connection to out database
 con = sqlite3.connect("TogDB.db")
@@ -8,6 +8,8 @@ con = sqlite3.connect("TogDB.db")
 cursor = con.cursor()
 # Populate the database with data
 populateDB()
+
+register_user()
 
 # Insert data for Nordlandsbanen
 cursor.execute("INSERT INTO Banestrekning (BanestrekningID, BanestrekningNavn, Fremdriftsenergi) VALUES (1, 'Nordlandsbanen', 'Diesel')")
@@ -48,6 +50,8 @@ print("All rows from table Togrute:")
 print(togruterows)
 
 
+
+
 station_name = get_station_name()
 weekday = get_weekday()
 # call function to get routes
@@ -57,6 +61,8 @@ routes = get_train_routes_for_station_on_weekday(station_name, weekday)
 print(f"\nThe following routes stop at {station_name} on weekday number {weekday}:")
 for route in routes:
     print(f"Route {route[0]} from {route[1]} to {route[2]}")
+
+
 
 # Define the menu option for searching routes
 def search_routes_menu():
