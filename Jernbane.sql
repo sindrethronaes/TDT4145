@@ -39,7 +39,6 @@ CREATE TABLE DelstrekningIHovedretning (
 CREATE TABLE Togrute (
 	"TogruteNavn"	TEXT PRIMARY KEY,
 	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID)
-
 );
 
 CREATE TABLE TogruterPåBanestrekning (
@@ -48,24 +47,20 @@ CREATE TABLE TogruterPåBanestrekning (
 	PRIMARY KEY ("Banestrekning", "TogruteNavn")
 );
 
-
 CREATE TABLE Operatør (
 	"OperatørNavn"	TEXT PRIMARY KEY,
 	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning)
 );
-
 
 CREATE TABLE Dato (
 	"Dato" DATE NOT NULL PRIMARY KEY,
 	"Ukedag" TEXT NOT NULL
 );
 
-
 CREATE TABLE AntallVogntyper (
 	"OperatørNavn" TEXT REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
 );
-
 
 CREATE TABLE Banestrekning (
 	"BanestrekningID" TEXT NOT NULL PRIMARY KEY,
@@ -88,22 +83,22 @@ CREATE TABLE Vogn (
 	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn)
 );
 
-
 CREATE TABLE Sovevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"AntallSenger" INT NOT NULL
+	"AntallSenger" INT NOT NULL,
+	"SengerPerKupe" INT NOT NULL
 );
-
 
 CREATE TABLE Sittevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"AntallSeter" INT NOT NULL
+	"AntallSeter" INT NOT NULL,
+	"SeterPerVogn" INT NOT NULL
 );
 
 --SUGGESTION OF NEW TABLE
 CREATE TABLE Kupe  (
 	"KupeID" INT NOT NULL,
-	"VognID" INT REFERENCES Vogn(VognID),
+	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
 	"AntallSenger" INT NOT NULL,
 	"Tilgjengelig" TEXT NOT NULL,
 	PRIMARY KEY ("KupeID", "VognID")
@@ -115,7 +110,7 @@ CREATE TABLE Seng (
 	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
 	"Tilgjengelig" TEXT NOT NULL,
-	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID) ,
+	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID),
 	PRIMARY KEY ("SengID", "KupeID", "VognID")
 );
 
@@ -124,22 +119,6 @@ CREATE TABLE Sete (
 	"SeteID" INT NOT NULL,
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
 	"Tilgjengelig" TEXT NOT NULL,
-	PRIMARY KEY ("SeteID", "VognID")
-);
-
--- SUGGESTION OF NEW TABLE
-CREATE TABLE SengIKupe (
-	"SengID" INT NOT NULL REFERENCES Seng(SengID),
-	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
-	"Plassering" TEXT NOT NULL, 
-	PRIMARY KEY ("SengID", "KupeID")
-);
-
--- SUGGESTION OF NEW TABLE
-CREATE TABLE SeteIVogn (
-	"SeteID" INT NOT NULL REFERENCES Sete(SeteID),
-	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
-	"Plassering" TEXT NOT NULL,
 	PRIMARY KEY ("SeteID", "VognID")
 );
 
