@@ -37,3 +37,7 @@ def get_phone_number():
 def get_yes_or_no():
     answer= input("Enter your answer y or n: ")
     return answer
+
+def get_number(): 
+    number=input("Enter your number: ")
+    return number

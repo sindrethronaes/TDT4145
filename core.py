@@ -1,7 +1,7 @@
 import sqlite3
 from prettytable import PrettyTable
 from initDB import initDB
-from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name
+from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name, get_number, get_yes_or_no
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -146,3 +146,18 @@ def register_user():
     con.commit()
     print("new user added")
     con.close
+
+
+def buy_ticket():
+    print("Are you a registerd user? \n")
+    answer=get_yes_or_no()
+    if (answer=="n"):
+        register_user()
+    if (answer=="y"):
+        print("\n Then you have a number as your userID")
+        userID=get_number() #hva skjer etterpå
+        print(userID)
+
+
+
+
