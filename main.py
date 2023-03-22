@@ -11,6 +11,8 @@ cursor = con.cursor()
 # Populate the database with necessary data
 populateDB()
 
+register_user()
+
 # Used to test user story a)
 check_user_story_a()
 
@@ -28,26 +30,7 @@ print(
 for route in routes:
     print(f"Route {route[0]} from {route[1]} to {route[2]}")
 
-# Define the menu option for searching routes
-
-
-def search_routes_menu():
-    print("\nSearch Routes")
-    start_station = input("Enter starting station: ")
-    end_station = input("Enter ending station: ")
-    date = input("Enter date (YYYY-MM-DD): ")
-    time = input("Enter time (HH:MM): ")
-    routes = search_routes(start_station, end_station, date, time)
-    if len(routes) == 0:
-        print("No routes found.")
-    else:
-        print("Routes found:")
-        for route in routes:
-            print(
-                f"- Train route: {route[0]}, Departure time: {route[1]}, Arrival time: {route[2]}")
-
-# Used to test user story f)
-check_user_story_f()
+search_routes_menu()
 
 # Save changes to database
 con.commit()
