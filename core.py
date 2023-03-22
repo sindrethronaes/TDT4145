@@ -99,9 +99,9 @@ def populateDB():
     # USER STORY f)
     # Inserts information regarding Operatører
     cursor.execute(
-        "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('VY AS', 'Nordlandsbanen')")
+        "INSERT INTO Operatoer(OperatoerNavn, Banestrekning) VALUES ('VY AS', 'Nordlandsbanen')")
     cursor.execute(
-        "INSERT INTO Operatør(OperatørNavn, Banestrekning) VALUES ('SJ Norge AS', 'Nordlandsbanen')")
+        "INSERT INTO Operatoer(OperatoerNavn, Banestrekning) VALUES ('SJ Norge AS', 'Nordlandsbanen')")
 
     # Inserts information regarding DelstrekningIHovedretning
     cursor.execute(
@@ -117,9 +117,9 @@ def populateDB():
 
     # Inserts information regarding TogruterPåBanestrekning
     cursor.execute(
-        "INSERT INTO TogruterPåBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'VY AS')")
+        "INSERT INTO TogruterPaaBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'VY AS')")
     cursor.execute(
-        "INSERT INTO TogruterPåBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'SJ Norge AS')")
+        "INSERT INTO TogruterPaaBanestrekning(Banestrekning, TogruteNavn) VALUES ('Nordlandsbanen', 'SJ Norge AS')")
 
     # Inserts information regarding Dato
     cursor.execute(
