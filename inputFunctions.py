@@ -31,5 +31,9 @@ def get_e_mail():
     return e_mail
 
 def get_phone_number():
-    phone_number=input("Enter your phone number")
+    phone_number=input("Enter your phone number: ")
     return phone_number
+
+def get_yes_or_no():
+    answer= input("Enter your answer y or n: ")
+    return answer

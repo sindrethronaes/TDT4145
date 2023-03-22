@@ -51,7 +51,6 @@ print(togruterows)
 
 
 
-
 station_name = get_station_name()
 weekday = get_weekday()
 # call function to get routes
