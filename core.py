@@ -81,6 +81,31 @@ def search_routes(start_station, end_station, date, time):
     return sorted_routes if sorted_routes else []
 
 
+def search_routes_menu():
+    print("\nSearch Routes")
+    start = start_station()
+    end = end_station()
+    d = date()
+    t = time()
+    routes = search_routes(start, end, d, t)
+    return routes
+
+
+def register_user():
+    con = sqlite3.connect("TogDB.db")
+    cursor = con.cursor()
+    print("\n Register as a user")
+    cursor.execute("SELECT COUNT(*) from Kunde")
+    KundeID=cursor.fetchone()[0]+1
+    cursor.execute(""" 
+    INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
+    VALUES (?,?,?,?)      
+    """, (KundeID, get_name(), get_e_mail(), get_phone_number()))
+    con.commit()
+    print("new user added")
+    con.close
+
+
 
 def check_user_story_a():
     #This function is used to test user story a)

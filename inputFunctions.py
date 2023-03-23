@@ -23,11 +23,17 @@ def time():
     time = input("Enter time (HH:MM): ")
     return time
 
-def get_contact_info():
+def get_name():
     name = input("Enter your name: ")
+    return name
+
+def get_e_mail():
     email = input("Enter your email: ")
+    return email
+
+def get_phone_number():
     phone = input("Enter your phone number: ")
-    return name, email, phone
+    return phone
 
 def get_vogn_type():
     vogn_type = input("Enter type of vogn ('sittevogn' or 'sovevogn'): ")
