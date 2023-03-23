@@ -1,7 +1,7 @@
 import sqlite3
 from prettytable import PrettyTable
 from inputFunctions import get_station_name, get_weekday
-from core import *
+from core import register_user, check_user_story_a, check_user_story_b, get_train_routes_for_station_on_weekday, search_routes_menu, populateDB
 
 # Creates a connection to out database
 con = sqlite3.connect("TogDB.db")
