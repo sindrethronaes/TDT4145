@@ -1,11 +1,8 @@
 from core import *
 from initDB import initDB
-from dummydata import populateDB
 
+# Creates a connection to our database
 initDB()
-
-# Populate the database with necessary data
-populateDB()
 
 # Used to test user story a)
 check_user_story_a()
