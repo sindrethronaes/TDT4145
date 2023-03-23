@@ -1,4 +1,4 @@
--- Sletter DB hvis den eksisterer
+-- Deletes DB if it alreadt exists
 DROP TABLE IF EXISTS TogruterPaaBanestrekning;
 DROP TABLE IF EXISTS Operatoer;
 DROP TABLE IF EXISTS AntallVogntyper;
@@ -18,15 +18,20 @@ DROP TABLE IF EXISTS Dato;
 DROP TABLE IF EXISTS Togrute;
 DROP TABLE IF EXISTS DelstrekningIHovedretning;
 DROP TABLE IF EXISTS Stasjon;
+DROP TABLE IF EXISTS Kupe;
+DROP TABLE IF EXISTS Sete;
+DROP TABLE IF EXISTS Seng;
+DROP TABLE IF EXISTS SeteIVogn;
+DROP TABLE IF EXISTS SengIKupe;
 
--- Lager DB
+-- Creates DB
 CREATE TABLE Stasjon (
 	"StasjonNavn"	TEXT NOT NULL PRIMARY KEY,
 	"Moh."	INT NOT NULL
 );
 
 CREATE TABLE DelstrekningIHovedretning (
-	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
+	"DelstrekningID" TEXT PRIMARY KEY REFERENCES Delstrekning(DelstrekningID),
 	"Startstasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
 	"Endestasjon" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn)
 );
@@ -34,12 +39,12 @@ CREATE TABLE DelstrekningIHovedretning (
 CREATE TABLE Togrute (
 	"TogruteNavn"	TEXT PRIMARY KEY,
 	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID)
-
 );
 
 CREATE TABLE TogruterPaaBanestrekning (
-	"Banestrekning"	TEXT PRIMARY KEY,
-	"TogruteNavn"	TEXT NOT NULL REFERENCES Togrute(TogruteNavn)
+	"Banestrekning"	TEXT REFERENCES Banestrekning(BanestrekningID),
+	"TogruteNavn"	TEXT REFERENCES Togrute(TogruteNavn),
+	PRIMARY KEY ("Banestrekning", "TogruteNavn")
 );
 
 
@@ -48,18 +53,15 @@ CREATE TABLE Operatoer (
 	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPaaBanestrekning(Banestrekning)
 );
 
-
 CREATE TABLE Dato (
 	"Dato" DATE NOT NULL PRIMARY KEY,
 	"Ukedag" TEXT NOT NULL
 );
 
-
 CREATE TABLE AntallVogntyper (
-	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn) PRIMARY KEY,
+	"OperatoerNavn" TEXT REFERENCES Operatoer(OperatoerNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
 );
-
 
 CREATE TABLE Banestrekning (
 	"BanestrekningID" TEXT NOT NULL PRIMARY KEY,
@@ -77,23 +79,49 @@ CREATE TABLE Vogn (
 	"VognID" TEXT NOT NULL PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
 	"TilgjengeligForBruk" TEXT NOT NULL,
-	"NummerIVognsammensetning" INT NOT NULL,
+	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
 );
 
-
 CREATE TABLE Sovevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"Seng"	TEXT NOT NULL
+	"AntallSenger" INT NOT NULL,
+	"SengerPerKupe" INT NOT NULL
 );
-
 
 CREATE TABLE Sittevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
-	"Sete"	TEXT NOT NULL
+	"AntallSeter" INT NOT NULL,
+	"SeterPerVogn" INT NOT NULL
 );
 
+--SUGGESTION OF NEW TABLE
+CREATE TABLE Kupe  (
+	"KupeID" INT NOT NULL,
+	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"AntallSenger" INT NOT NULL,
+	"Tilgjengelig" TEXT NOT NULL,
+	PRIMARY KEY ("KupeID", "VognID")
+);
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE Seng (
+	"SengID" INT NOT NULL,
+	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
+	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"Tilgjengelig" TEXT NOT NULL,
+	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID),
+	PRIMARY KEY ("SengID", "KupeID", "VognID")
+);
+
+-- SUGGESTION OF NEW TABLE
+CREATE TABLE Sete (
+	"SeteID" INT NOT NULL,
+	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"Tilgjengelig" TEXT NOT NULL,
+	PRIMARY KEY ("SeteID", "VognID")
+);
 
 CREATE TABLE Kunde (
 	"KundeID" TEXT PRIMARY KEY,
@@ -104,19 +132,19 @@ CREATE TABLE Kunde (
 
 CREATE TABLE KundeOrdre (
 	"OrdreID" TEXT NOT NULL PRIMARY KEY,
-	"Dato"	DATE NOT NULL,
+	"Dato"	DATE NOT NULL REFERENCES Dato(Dato),
 	"TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
 	"KundeID" TEXT NOT NULL REFERENCES Kunde(KundeID)
 );
 
 CREATE TABLE BillettISittevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"Sete" TEXT NOT NULL REFERENCES Sittevogn(Sete)
+	"SeteID" TEXT NOT NULL REFERENCES Sete(SeteID)
 );
 
 CREATE TABLE BillettISovevogn (
 	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"Seng" TEXT NOT NULL REFERENCES Sovevogn(Seng)
+	"SengID" TEXT NOT NULL REFERENCES Seng(SengID)
 );
 
 CREATE TABLE Rutestopp (
