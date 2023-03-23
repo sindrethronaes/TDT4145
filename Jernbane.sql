@@ -72,13 +72,13 @@ CREATE TABLE Banestrekning (
 CREATE TABLE Delstrekning (
 	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
 	"LengdeIkm"	INT NOT NULL,
-	"HarDobbbeltspor" TEXT NOT NULL
+	"HarDobbbeltspor" BOOLEAN NOT NULL
 );
 
 CREATE TABLE Vogn (
 	"VognID" TEXT NOT NULL PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
-	"TilgjengeligForBruk" TEXT NOT NULL,
+	"TilgjengeligForBruk" BOOLEAN NOT NULL,
 	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
@@ -101,7 +101,7 @@ CREATE TABLE Kupe  (
 	"KupeID" INT NOT NULL,
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
 	"AntallSenger" INT NOT NULL,
-	"Tilgjengelig" TEXT NOT NULL,
+	"Tilgjengelig" BOOLEAN,
 	PRIMARY KEY ("KupeID", "VognID")
 );
 
@@ -110,7 +110,7 @@ CREATE TABLE Seng (
 	"SengID" INT NOT NULL,
 	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
-	"Tilgjengelig" TEXT NOT NULL,
+	"Tilgjengelig" BOOLEAN,
 	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID),
 	PRIMARY KEY ("SengID", "KupeID", "VognID")
 );
