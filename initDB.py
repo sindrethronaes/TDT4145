@@ -1,5 +1,4 @@
 import sqlite3
-from dummydata import populateDB
 
 
 def initDB():
@@ -16,9 +15,6 @@ def initDB():
 
     # Execute the script that initializes the DB
     con.executescript(sql_script)
-
-    # Populate the DB with dummy data
-    populateDB()
 
     # Commit the changes aka "Save"
     con.commit()

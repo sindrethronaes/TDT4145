@@ -45,6 +45,7 @@ CREATE TABLE TogruterPaaBanestrekning (
 	PRIMARY KEY ("Banestrekning", "TogruteNavn")
 );
 
+
 CREATE TABLE Operatoer (
 	"OperatoerNavn"	TEXT PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL, 
@@ -65,13 +66,13 @@ CREATE TABLE Banestrekning (
 CREATE TABLE Delstrekning (
 	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
 	"LengdeIkm"	INT NOT NULL,
-	"HarDobbbeltspor" BOOLEAN NOT NULL
+	"HarDobbbeltspor" TEXT NOT NULL
 );
 
 CREATE TABLE Vogn (
 	"VognID" TEXT NOT NULL PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
-	"TilgjengeligForBruk" BOOLEAN NOT NULL,
+	"TilgjengeligForBruk" TEXT NOT NULL,
 	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
@@ -84,7 +85,7 @@ CREATE TABLE Sovevogn (
 );
 
 CREATE TABLE Sittevogn (
-	"VognID" TEXT PRIMARY KEY, --REFERENCES Vogn(VognID),
+	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
 	"AntallSeter" INT NOT NULL,
 	"SeterPerRad" INT NOT NULL
 );
@@ -102,7 +103,7 @@ CREATE TABLE Seng (
 	"SengID" INT NOT NULL,
 	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
-	"Tilgjengelig" BOOLEAN,
+	"Tilgjengelig" TEXT NOT NULL,
 	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID),
 	PRIMARY KEY ("SengID", "KupeID", "VognID")
 );
