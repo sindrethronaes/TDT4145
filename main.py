@@ -14,7 +14,7 @@ populateDB()
 
 
 buy_ticket()
-register_user()
+#register_user()
 
 # Used to test user story a)
 check_user_story_a()

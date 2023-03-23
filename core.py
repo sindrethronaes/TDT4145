@@ -135,37 +135,36 @@ def populateDB():
         cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatoerNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
 
     # Inserts information regarding seats (12 seats per car)
-    for i in range(1, 11):
-        for j in range(1, 13):
-            cursor.execute(
-                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
-
-    # Inserts information regarding beds (8 beds per car)
-    for i in range(11, 21):
-        for j in range(1, 9):
-            cursor.execute(
-                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (i, j))
-
-    # Inserts information regarding Kupe
-    for i in range(11, 21):
-        for j in range(1, 5):
-            cursor.execute(
-                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , 'Ja')", (j, i))
-
-    # Inserts information regarding Seng (8 Beds in total per Kupe)
-    for k in range(11, 21):
-        for i in range(1, 5):
-            for j in range(1, 3):
-                cursor.execute(
-                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (j, i, k))
-
-    # Inserts information regarding Sete (12 Seats in total per Vogn)
-    for i in range(1, 11):
-        for j in range(1, 13):
-            cursor.execute(
-                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, 'Ja')", (j, i))
-
-    # Commit the changes aka "Saves" the DB-State
+#    for i in range(1, 11):
+#        for j in range(1, 13):
+#            cursor.execute(
+#                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
+#
+#    # Inserts information regarding beds (8 beds per car)
+#    for i in range(11, 21):
+#        cursor.execute(
+#            "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, 8, 2)", (i,))
+#
+#    # Inserts information regarding Kupe
+#    for i in range(11, 21):
+#        for j in range(1, 5):
+#            cursor.execute(
+#                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 2 , 'Ja')", (j, i))
+#
+#    # Inserts information regarding Seng (8 Beds in total per Kupe)
+#    for k in range(11, 21):
+#        for i in range(1, 5):
+#            for j in range(1, 3):
+#                cursor.execute(
+#                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (j, i, k))
+#
+#    # Inserts information regarding Sete (12 Seats in total per Vogn)
+#    for i in range(1, 11):
+#        for j in range(1, 13):
+#            cursor.execute(
+#                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, 'Ja')", (j, i))
+#
+#    # Commit the changes aka "Saves" the DB-State
     con.commit()
 
 
@@ -314,19 +313,23 @@ def buy_ticket():
     answer=get_yes_or_no()
     if (answer=="n"):
         register_user()
-    #if (answer=="y"):
-    print("\n Then you have a number as your userID")
-    userID=get_number() #hva skjer etterpå
-    print(userID) 
-    name= cursor.execute("""SELECT Navn FROM Kunde WHERE KundeID=userID""")
-    print(name)
-    
+        buy_ticket()
+    if (answer=="y"):
+        print("\n Then you have a number as your userID")
+        userID=get_number() #hva skjer etterpå
+        print(userID) 
+        cursor.execute("SELECT Navn FROM Kunde WHERE KundeID=?",(userID,))
+        name=cursor.fetchall()
+        print(name)
 
 
-    con.commit()
+    routes=search_routes_menu()
+    print(routes)
+    get_dates_for_togrute(cursor, routes)
+
     print("order added")
+    con.commit()
     con.close
-
 
 
 

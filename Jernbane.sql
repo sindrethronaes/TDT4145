@@ -90,7 +90,7 @@ CREATE TABLE Sovevogn (
 );
 
 CREATE TABLE Sittevogn (
-	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
+	"VognID" TEXT PRIMARY KEY, --REFERENCES Vogn(VognID),
 	"AntallSeter" INT NOT NULL,
 	"SeterPerVogn" INT NOT NULL
 );
