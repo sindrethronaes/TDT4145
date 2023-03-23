@@ -1,6 +1,6 @@
--- Deletes DB if it alreadt exists
-DROP TABLE IF EXISTS TogruterPåBanestrekning;
-DROP TABLE IF EXISTS Operatør;
+-- Deletes DB if it already exists
+DROP TABLE IF EXISTS TogruterPaaBanestrekning;
+DROP TABLE IF EXISTS Operatoer;
 DROP TABLE IF EXISTS AntallVogntyper;
 DROP TABLE IF EXISTS Vogn;
 DROP TABLE IF EXISTS Sovevogn;
@@ -41,7 +41,7 @@ CREATE TABLE Togrute (
 	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID)
 );
 
-CREATE TABLE TogruterPåBanestrekning (
+CREATE TABLE TogruterPaaBanestrekning (
 	"Banestrekning"	TEXT REFERENCES Banestrekning(BanestrekningID),
 	"TogruteNavn"	TEXT REFERENCES Togrute(TogruteNavn),
 	PRIMARY KEY ("Banestrekning", "TogruteNavn")
@@ -58,7 +58,7 @@ CREATE TABLE Dato (
 );
 
 CREATE TABLE AntallVogntyper (
-	"OperatørNavn" TEXT REFERENCES Operatør(OperatørNavn) PRIMARY KEY,
+	"OperatoerNavn" TEXT REFERENCES Operatoer(OperatoerNavn) PRIMARY KEY,
 	"AntallVogntyper" INT NOT NULL
 );
 
