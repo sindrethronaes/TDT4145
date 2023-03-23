@@ -149,14 +149,24 @@ def register_user():
 
 
 def buy_ticket():
+    con = sqlite3.connect("TogDB.db")
+    cursor = con.cursor()
     print("Are you a registerd user? \n")
     answer=get_yes_or_no()
     if (answer=="n"):
         register_user()
-    if (answer=="y"):
-        print("\n Then you have a number as your userID")
-        userID=get_number() #hva skjer etterpå
-        print(userID)
+    #if (answer=="y"):
+    print("\n Then you have a number as your userID")
+    userID=get_number() #hva skjer etterpå
+    print(userID) 
+    name= cursor.execute("""SELECT Navn FROM Kunde WHERE KundeID=userID""")
+    print(name)
+    
+
+
+    con.commit()
+    print("order added")
+    con.close
 
 
 
