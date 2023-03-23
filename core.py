@@ -195,7 +195,7 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
         SELECT TogruteNavn
         FROM Rutestopp
         WHERE StasjonNavn = ?
-    """, (StasjonNavn,))
+    """, (station_name,))
     train_routes = cur.fetchall()
 
     # Filter train routes by weekday
@@ -206,7 +206,7 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
             SELECT *
             FROM DatoerForTogruter
             WHERE Togrutenavn = ? AND strftime('%w', Dato) = ?
-        """, (route[0], str(Ukedag)))
+        """, (route[0], str(weekday)))
         if cur.fetchone():
             filtered_train_routes.append(route[0])
 
