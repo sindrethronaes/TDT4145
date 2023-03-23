@@ -4,6 +4,14 @@ from initDB import initDB
 # Creates a connection to out database
 initDB()
 
+search_routes("Trondheim S", "Bodø", "2023-04-03", "07:49")
+
+print("\n ok\n")
+buy_ticket()
+
+check_user_story_d()
+
+
 
 # Used to test user story a)
 check_user_story_a()

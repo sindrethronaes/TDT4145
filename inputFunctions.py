@@ -36,6 +36,15 @@ def get_vogn_type():
         vogn_type = input("Enter type of vogn ('sittevogn' or 'sovevogn'): ")
     return vogn_type
 
+def get_name():
+    name= input("Enter your name: ")
+    return name
+
+def get_e_mail():
+    e_mail= input("Enter your e-mail: ")
+    return e_mail
+
+
 def get_phone_number():
     phone_number=input("Enter your phone number: ")
     return phone_number
