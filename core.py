@@ -127,25 +127,19 @@ def populateDB():
     cursor.execute(
         "INSERT INTO Dato(Dato, Ukedag) VALUES ('2023-04-04', 'Tirsdag')")
 
-    # Inserts information regarding Vogn, Sovevogn, Sittevogn (10 of each)
+    # Inserts information regarding Vogn, Sittevogn (10 of each, 12 Seats per Car)
     for i in range(1, 11):
         cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sittevogn', 'Ledig', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute(
+            "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerRad) VALUES (?, 12, 4)", (i,))
 
+    # Inserts information regarding Vogn, Sovevogn (10 of each, 8 Beds per Car)
     for i in range(11, 21):
         cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute(
+            "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, 8, 2)", (i,))
 
-    # Inserts information regarding seats (12 seats per car)
-    for i in range(1, 11):
-        for j in range(1, 13):
-            cursor.execute(
-                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
-
-    # Inserts information regarding beds (8 beds per car)
-    for i in range(11, 21):
-        for j in range(1, 9):
-            cursor.execute(
-                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (i, j))
-
+    # TODO FIX FROM HERE
     # Inserts information regarding Kupe
     for i in range(11, 21):
         for j in range(1, 5):
@@ -215,7 +209,6 @@ def get_train_routes_for_station_on_weekday(station_name, weekday):
 
     # Returns all train routes that passes the given station on the given day of the week
     return filtered_train_routes
-
 
 
 def search_routes(start_station, end_station, date, time):
@@ -297,7 +290,7 @@ def register_user():
     cursor = con.cursor()
     print("\n Register as a user")
     cursor.execute("SELECT COUNT(*) from Kunde")
-    KundeID=cursor.fetchone()[0]+1
+    KundeID = cursor.fetchone()[0]+1
     cursor.execute(""" 
     INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
     VALUES (?,?,?,?)      
@@ -305,7 +298,6 @@ def register_user():
     con.commit()
     print("new user added")
     con.close
-
 
 
 def get_dates_for_togrute(cursor, togrute_navn):
