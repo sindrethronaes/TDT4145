@@ -132,32 +132,21 @@ def populateDB():
         cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sittevogn', 'Ledig', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
         cursor.execute(
             "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerRad) VALUES (?, 12, 4)", (i,))
+        for j in range(1, 13):
+            cursor.execute(
+                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, ?, 'Ja')", (j, i))
 
-    # Inserts information regarding Vogn, Sovevogn (10 of each, 8 Beds per Car)
+    # Inserts information regarding Vogn, Sovevogn and Kupe (10 of each, 8 Beds per Kupe)
     for i in range(11, 21):
         cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
         cursor.execute(
             "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, 8, 2)", (i,))
-
-    # TODO FIX FROM HERE
-    # Inserts information regarding Kupe
-    for i in range(11, 21):
         for j in range(1, 5):
             cursor.execute(
-                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , 'Ja')", (j, i))
-
-    # Inserts information regarding Seng (8 Beds in total per Kupe)
-    for k in range(11, 21):
-        for i in range(1, 5):
-            for j in range(1, 3):
+                "INSERT INTO Kupe(KupeID, VognID, Tilgjengelig) VALUES (?, ?, 'Ja')", (j, i))
+            for k in range(1, 3):
                 cursor.execute(
-                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (j, i, k))
-
-    # Inserts information regarding Sete (12 Seats in total per Vogn)
-    for i in range(1, 11):
-        for j in range(1, 13):
-            cursor.execute(
-                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, 'Ja')", (j, i))
+                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (k, j, i))
 
     # Commit the changes aka "Saves" the DB-State
     con.commit()
