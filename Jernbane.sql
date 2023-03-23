@@ -47,9 +47,9 @@ CREATE TABLE TogruterPaaBanestrekning (
 	PRIMARY KEY ("Banestrekning", "TogruteNavn")
 );
 
-CREATE TABLE Operatør (
-	"OperatørNavn"	TEXT PRIMARY KEY,
-	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPåBanestrekning(Banestrekning)
+CREATE TABLE Operatoer (
+	"OperatoerNavn"	TEXT PRIMARY KEY,
+	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPaaBanestrekning(Banestrekning)
 );
 
 CREATE TABLE Dato (
@@ -80,7 +80,7 @@ CREATE TABLE Vogn (
 	"TilgjengeligForBruk" TEXT NOT NULL,
 	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
-	"OperatørNavn" TEXT NOT NULL REFERENCES Operatør(OperatørNavn)
+	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
 );
 
 CREATE TABLE Sovevogn (
