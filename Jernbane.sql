@@ -1,28 +1,24 @@
 -- Deletes DB if it alreadt exists
-DROP TABLE IF EXISTS TogruterPaaBanestrekning;
-DROP TABLE IF EXISTS Operatoer;
-DROP TABLE IF EXISTS AntallVogntyper;
-DROP TABLE IF EXISTS Vogn;
-DROP TABLE IF EXISTS Sovevogn;
-DROP TABLE IF EXISTS Sittevogn;
-DROP TABLE IF EXISTS BillettISovevogn;
+DROP TABLE IF EXISTS Banestrekning;
 DROP TABLE IF EXISTS BillettISittevogn;
+DROP TABLE IF EXISTS BillettISovevogn;
+DROP TABLE IF EXISTS Dato;
+DROP TABLE IF EXISTS Delstrekning;
+DROP TABLE IF EXISTS DelstrekningIHovedretning;
+DROP TABLE IF EXISTS Kunde;
 DROP TABLE IF EXISTS KundeOrdre;
+DROP TABLE IF EXISTS Kupe;
+DROP TABLE IF EXISTS Operatoer;
 DROP TABLE IF EXISTS Ordre;
 DROP TABLE IF EXISTS Rutestopp;
-DROP TABLE IF EXISTS DatoerForTogruter;
-DROP TABLE IF EXISTS Kunde;
-DROP TABLE IF EXISTS Delstrekning;
-DROP TABLE IF EXISTS Banestrekning;
-DROP TABLE IF EXISTS Dato;
-DROP TABLE IF EXISTS Togrute;
-DROP TABLE IF EXISTS DelstrekningIHovedretning;
-DROP TABLE IF EXISTS Stasjon;
-DROP TABLE IF EXISTS Kupe;
-DROP TABLE IF EXISTS Sete;
 DROP TABLE IF EXISTS Seng;
-DROP TABLE IF EXISTS SeteIVogn;
-DROP TABLE IF EXISTS SengIKupe;
+DROP TABLE IF EXISTS Sete;
+DROP TABLE IF EXISTS Sittevogn;
+DROP TABLE IF EXISTS Sovevogn;
+DROP TABLE IF EXISTS Stasjon;
+DROP TABLE IF EXISTS Togrute;
+DROP TABLE IF EXISTS TogruterPaaBanestrekning;
+DROP TABLE IF EXISTS Vogn;
 
 -- Creates DB
 CREATE TABLE Stasjon (
@@ -37,8 +33,10 @@ CREATE TABLE DelstrekningIHovedretning (
 );
 
 CREATE TABLE Togrute (
-	"TogruteNavn"	TEXT PRIMARY KEY,
-	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID)
+	"TogruteNavn"	TEXT NOT NULL,
+	"Dato" DATE NULL NULL REFERENCES Dato(Dato),
+	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID),
+	PRIMARY KEY ("TogruteNavn", "Dato")
 );
 
 CREATE TABLE TogruterPaaBanestrekning (
@@ -50,17 +48,13 @@ CREATE TABLE TogruterPaaBanestrekning (
 
 CREATE TABLE Operatoer (
 	"OperatoerNavn"	TEXT PRIMARY KEY,
+	"AntallVogntyper" INT NOT NULL, 
 	"Banestrekning"	TEXT NOT NULL REFERENCES TogruterPaaBanestrekning(Banestrekning)
 );
 
 CREATE TABLE Dato (
 	"Dato" DATE NOT NULL PRIMARY KEY,
 	"Ukedag" TEXT NOT NULL
-);
-
-CREATE TABLE AntallVogntyper (
-	"OperatoerNavn" TEXT REFERENCES Operatoer(OperatoerNavn) PRIMARY KEY,
-	"AntallVogntyper" INT NOT NULL
 );
 
 CREATE TABLE Banestrekning (
@@ -93,14 +87,13 @@ CREATE TABLE Sovevogn (
 CREATE TABLE Sittevogn (
 	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
 	"AntallSeter" INT NOT NULL,
-	"SeterPerVogn" INT NOT NULL
+	"SeterPerRad" INT NOT NULL
 );
 
 --SUGGESTION OF NEW TABLE
 CREATE TABLE Kupe  (
 	"KupeID" INT NOT NULL,
 	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
-	"AntallSenger" INT NOT NULL,
 	"Tilgjengelig" TEXT NOT NULL,
 	PRIMARY KEY ("KupeID", "VognID")
 );
@@ -158,9 +151,4 @@ CREATE TABLE Rutestopp (
 CREATE TABLE Ordre (
 	"OrdreID" TEXT PRIMARY KEY,
 	"BillettID" TEXT NOT NULL
-);
-
-CREATE TABLE DatoerForTogruter (
-	"Togrutenavn" TEXT PRIMARY KEY REFERENCES Togrute(TogruteNavn),
-	"Dato" DATE NOT NULL REFERENCES Dato(Dato)
 );
