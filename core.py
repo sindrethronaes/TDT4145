@@ -1,7 +1,7 @@
 import sqlite3
 from prettytable import PrettyTable
 from initDB import initDB
-from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name, get_number, get_yes_or_no
+from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -129,42 +129,43 @@ def populateDB():
 
     # Inserts information regarding Vogn, Sovevogn, Sittevogn (10 of each)
     for i in range(1, 11):
-        cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatoerNavn) VALUES (?, 'Sittevogn', 'Ledig', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sittevogn', 'Ledig', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
 
     for i in range(11, 21):
-        cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatoerNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sovevogn', 'Ledig', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
 
     # Inserts information regarding seats (12 seats per car)
-#    for i in range(1, 11):
-#        for j in range(1, 13):
-#            cursor.execute(
-#                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
-#
-#    # Inserts information regarding beds (8 beds per car)
-#    for i in range(11, 21):
-#        cursor.execute(
-#            "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, 8, 2)", (i,))
-#
-#    # Inserts information regarding Kupe
-#    for i in range(11, 21):
-#        for j in range(1, 5):
-#            cursor.execute(
-#                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 2 , 'Ja')", (j, i))
-#
-#    # Inserts information regarding Seng (8 Beds in total per Kupe)
-#    for k in range(11, 21):
-#        for i in range(1, 5):
-#            for j in range(1, 3):
-#                cursor.execute(
-#                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (j, i, k))
-#
-#    # Inserts information regarding Sete (12 Seats in total per Vogn)
-#    for i in range(1, 11):
-#        for j in range(1, 13):
-#            cursor.execute(
-#                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, 'Ja')", (j, i))
-#
-#    # Commit the changes aka "Saves" the DB-State
+    for i in range(1, 11):
+        for j in range(1, 13):
+            cursor.execute(
+                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
+
+    # Inserts information regarding beds (8 beds per car)
+    for i in range(11, 21):
+        for j in range(1, 9):
+            cursor.execute(
+                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (i, j))
+
+    # Inserts information regarding Kupe
+    for i in range(11, 21):
+        for j in range(1, 5):
+            cursor.execute(
+                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , 'Ja')", (j, i))
+
+    # Inserts information regarding Seng (8 Beds in total per Kupe)
+    for k in range(11, 21):
+        for i in range(1, 5):
+            for j in range(1, 3):
+                cursor.execute(
+                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 'Ja')", (j, i, k))
+
+    # Inserts information regarding Sete (12 Seats in total per Vogn)
+    for i in range(1, 11):
+        for j in range(1, 13):
+            cursor.execute(
+                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, 'Ja')", (j, i))
+
+    # Commit the changes aka "Saves" the DB-State
     con.commit()
 
 
@@ -228,6 +229,10 @@ def search_routes(start_station, end_station, date, time):
       The name of the start station
     end_station : string
       The name of the end station
+    date : string
+        The date in the format YYYY-MM-DD
+    time : string
+        The time in the format HH:MM
 
     Returns
     -------
@@ -278,10 +283,65 @@ def search_routes(start_station, end_station, date, time):
     else:
         print("No routes found.")
 
-    return sorted_routes
+    return sorted_routes if sorted_routes else []
 
 
-def search_routes_menu():
+
+def check_user_story_a():
+    #This function is used to test user story a)
+
+    cursor.execute("SELECT * FROM Banestrekning")
+    banestrekningrows = cursor.fetchall()
+    print("All rows from table Banestrekning:")
+    for banestrekning in banestrekningrows:
+        print(banestrekning)
+
+
+def check_user_story_b():
+    #This function is used to test user story b)
+
+    cursor.execute("SELECT * FROM Togrute")
+    togruterows = cursor.fetchall()
+    print("All rows from table Togrute:")
+    for togrute in togruterows:
+        print(togrute)
+
+def check_user_story_c():
+    #This function is used to test user story c)
+
+    station_name = get_station_name()
+    weekday = get_weekday()
+    # call function to get routes
+    routes = check_user_story_c(station_name, weekday)
+
+    # print results
+    print(
+        f"\nThe following routes stop at {station_name} on weekday number {weekday}:")
+    for route in routes:
+        print(f"Route {route[0]} from {route[1]} to {route[2]}")
+
+# Run python main.py purchases <customer_id> in the terminal to see the upcoming purchases for a customer
+def check_user_story_h(customer_id):
+    with sqlite3.connect("TogDB.db") as conn:
+        c = conn.cursor()
+        c.execute("""SELECT t.date, r.name, t.departure_time, t.arrival_time, t.price
+                     FROM purchases p
+                     JOIN tickets t ON t.id = p.ticket_id
+                     JOIN routes r ON r.id = t.route_id
+                     WHERE p.customer_id = ?
+                     AND t.departure_time > datetime('now')
+                     ORDER BY t.departure_time ASC""", (customer_id,))
+        rows = c.fetchall()
+        if not rows:
+            print("No upcoming purchases found for customer", customer_id)
+            return
+        table = PrettyTable(['Date', 'Route', 'Departure Time', 'Arrival Time', 'Price'])
+        table.align['Route'] = 'l'
+        for row in rows:
+            table.add_row(row)
+        print(table)
+
+def check_user_story_d():
     print("\nSearch Routes")
     start = start_station()
     end = end_station()
@@ -290,8 +350,7 @@ def search_routes_menu():
     routes = search_routes(start, end, d, t)
     return routes
 
-
-def register_user():
+def check_user_story_e():
     con = sqlite3.connect("TogDB.db")
     cursor = con.cursor()
     print("\n Register as a user")
@@ -300,37 +359,10 @@ def register_user():
     cursor.execute(""" 
     INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
     VALUES (?,?,?,?)      
-    """, (KundeID, get_name(), get_e_mail(), get_phone_number()))
+    """, (KundeID, get_contact_info))
     con.commit()
     print("new user added")
     con.close
-
-
-def buy_ticket():
-    con = sqlite3.connect("TogDB.db")
-    cursor = con.cursor()
-    print("Are you a registerd user? \n")
-    answer=get_yes_or_no()
-    if (answer=="n"):
-        register_user()
-        buy_ticket()
-    if (answer=="y"):
-        print("\n Then you have a number as your userID")
-        userID=get_number() #hva skjer etterpå
-        print(userID) 
-        cursor.execute("SELECT Navn FROM Kunde WHERE KundeID=?",(userID,))
-        name=cursor.fetchall()
-        print(name)
-
-
-    routes=search_routes_menu()
-    print(routes)
-    get_dates_for_togrute(cursor, routes)
-
-    print("order added")
-    con.commit()
-    con.close
-
 
 
 
