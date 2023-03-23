@@ -106,35 +106,10 @@ def check_user_story_c():
 
     station_name = get_station_name()
     weekday = get_weekday()
-    # call function to get routes
-    routes = check_user_story_c(station_name, weekday)
 
     # print results
     print(
         f"\nThe following routes stop at {station_name} on weekday number {weekday}:")
-    for route in routes:
-        print(f"Route {route[0]} from {route[1]} to {route[2]}")
-
-# Run python main.py purchases <customer_id> in the terminal to see the upcoming purchases for a customer
-def check_user_story_h(customer_id):
-    with sqlite3.connect("TogDB.db") as conn:
-        c = conn.cursor()
-        c.execute("""SELECT t.date, r.name, t.departure_time, t.arrival_time, t.price
-                     FROM purchases p
-                     JOIN tickets t ON t.id = p.ticket_id
-                     JOIN routes r ON r.id = t.route_id
-                     WHERE p.customer_id = ?
-                     AND t.departure_time > datetime('now')
-                     ORDER BY t.departure_time ASC""", (customer_id,))
-        rows = c.fetchall()
-        if not rows:
-            print("No upcoming purchases found for customer", customer_id)
-            return
-        table = PrettyTable(['Date', 'Route', 'Departure Time', 'Arrival Time', 'Price'])
-        table.align['Route'] = 'l'
-        for row in rows:
-            table.add_row(row)
-        print(table)
 
 def check_user_story_d():
     print("\nSearch Routes")
@@ -146,18 +121,14 @@ def check_user_story_d():
     return routes
 
 def check_user_story_e():
-    con = sqlite3.connect("TogDB.db")
-    cursor = con.cursor()
-    print("\n Register as a user")
-    cursor.execute("SELECT COUNT(*) from Kunde")
-    KundeID=cursor.fetchone()[0]+1
-    cursor.execute(""" 
-    INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
-    VALUES (?,?,?,?)      
-    """, (KundeID, get_contact_info))
-    con.commit()
-    print("new user added")
-    con.close
+    pass
 
 def check_user_story_f():
+    pass
+
+def check_user_story_g():
+    pass
+
+# Run python main.py purchases <customer_id> in the terminal to see the upcoming purchases for a customer
+def check_user_story_h():
     pass

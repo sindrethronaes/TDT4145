@@ -76,7 +76,7 @@ CREATE TABLE Delstrekning (
 );
 
 CREATE TABLE Vogn (
-	"VognID" TEXT NOT NULL PRIMARY KEY,
+	"VognID" INT PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
 	"TilgjengeligForBruk" BOOLEAN NOT NULL,
 	"NummerIVognsammensetning" INT,
@@ -85,21 +85,21 @@ CREATE TABLE Vogn (
 );
 
 CREATE TABLE Sovevogn (
-	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
+	"VognID" INT PRIMARY KEY REFERENCES Vogn(VognID),
 	"AntallSenger" INT NOT NULL,
 	"SengerPerKupe" INT NOT NULL
 );
 
 CREATE TABLE Sittevogn (
-	"VognID" TEXT PRIMARY KEY REFERENCES Vogn(VognID),
+	"VognID" INT PRIMARY KEY REFERENCES Vogn(VognID),
 	"AntallSeter" INT NOT NULL,
 	"SeterPerVogn" INT NOT NULL
 );
 
 --SUGGESTION OF NEW TABLE
 CREATE TABLE Kupe  (
-	"KupeID" INT NOT NULL,
-	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"KupeID" INT,
+	"VognID" INT REFERENCES Vogn(VognID),
 	"AntallSenger" INT NOT NULL,
 	"Tilgjengelig" BOOLEAN,
 	PRIMARY KEY ("KupeID", "VognID")
@@ -109,7 +109,7 @@ CREATE TABLE Kupe  (
 CREATE TABLE Seng (
 	"SengID" INT NOT NULL,
 	"KupeID" INT NOT NULL REFERENCES Kupe(KupeID),
-	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"VognID" INT REFERENCES Vogn(VognID),
 	"Tilgjengelig" BOOLEAN,
 	FOREIGN KEY ("KupeID", "VognID") REFERENCES Kupe(KupeID, VognID),
 	PRIMARY KEY ("SengID", "KupeID", "VognID")
@@ -117,8 +117,8 @@ CREATE TABLE Seng (
 
 -- SUGGESTION OF NEW TABLE
 CREATE TABLE Sete (
-	"SeteID" INT NOT NULL,
-	"VognID" INT NOT NULL REFERENCES Vogn(VognID),
+	"SeteID" INT,
+	"VognID" INT REFERENCES Vogn(VognID),
 	"Tilgjengelig" TEXT NOT NULL,
 	PRIMARY KEY ("SeteID", "VognID")
 );

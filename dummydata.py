@@ -1,4 +1,6 @@
 import sqlite3
+import uuid
+
 
 def populateDB():
     con = sqlite3.connect("TogDB.db")
@@ -9,6 +11,8 @@ def populateDB():
     cursor.execute("DELETE FROM Stasjon")
     cursor.execute("DELETE FROM Delstrekning")
     cursor.execute("DELETE FROM Togrute")
+    cursor.execute("DELETE FROM Sittevogn")
+    cursor.execute("DELETE FROM Sovevogn")
     con.commit()
 
     # USER STORY a)
@@ -118,41 +122,46 @@ def populateDB():
 
     # Inserts information regarding Vogn, Sovevogn, Sittevogn (10 of each)
     for i in range(1, 11):
-        cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sittevogn', '1', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute("INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatoerNavn) VALUES (?, 'Sittevogn', '1', 'NULL', 'SJ-sittevogn-1', 'SJ Norge AS' )", (i,))
 
     for i in range(11, 21):
-        cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatørNavn) VALUES (?, 'Sovevogn', '1', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
+        cursor.execute(f"INSERT INTO Vogn(VognID, Navn, TilgjengeligForBruk, NummerIVognsammensetning, VognType, OperatoerNavn) VALUES (?, 'Sovevogn', '1', 'NULL', 'SJ-sovevogn-1', 'SJ Norge AS' )", (i,))
 
     # Inserts information regarding seats (12 seats per car)
     for i in range(1, 11):
         for j in range(1, 13):
             cursor.execute(
-                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)", (i, j))
+                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerVogn) VALUES (?, ?, 12)",
+                (str(uuid.uuid4()), j)
+            )
+
 
     # Inserts information regarding beds (8 beds per car)
     for i in range(11, 21):
         for j in range(1, 9):
             cursor.execute(
-                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (i, j))
+                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (str(uuid.uuid4()), j))
 
     # Inserts information regarding Kupe
     for i in range(11, 21):
-        for j in range(1, 5):
-            cursor.execute(
-                "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , '1')", (j, i))
+            for j in range(1, 5):
+                cursor.execute(
+                    "INSERT INTO Kupe(KupeID, VognID, AntallSenger, Tilgjengelig) VALUES (?, ?, 8 , 1)", (j, i))
 
     # Inserts information regarding Seng (8 Beds in total per Kupe)
     for k in range(11, 21):
-        for i in range(1, 5):
-            for j in range(1, 3):
-                cursor.execute(
-                    "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, '1')", (j, i, k))
+            for i in range(1, 5):
+                for j in range(1, 3):
+                    cursor.execute(
+                        "INSERT INTO Seng(SengID, KupeID, VognID, Tilgjengelig) VALUES (?, ?, ?, 1)", (j, i, k))
+
 
     # Inserts information regarding Sete (12 Seats in total per Vogn)
     for i in range(1, 11):
         for j in range(1, 13):
             cursor.execute(
-                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, +, '1')", (j, i))
+                "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, ?, 1)", (j, i))
+
 
     # Commit the changes aka "Saves" the DB-State
     con.commit()

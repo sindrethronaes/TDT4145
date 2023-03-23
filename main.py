@@ -14,6 +14,7 @@ check_user_story_b()
 check_user_story_c()
 
 # Used to test user story d)
+check_user_story_d()
 
 # Used to test user story e)
 check_user_story_e()
@@ -22,6 +23,7 @@ check_user_story_e()
 check_user_story_f()
 
 # Used to test user story g)
+check_user_story_g()
 
 # Used to test user story h)
 check_user_story_h()
