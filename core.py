@@ -1,7 +1,7 @@
 import sqlite3
 from prettytable import PrettyTable
 from initDB import initDB
-from inputFunctions import *
+from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -24,10 +24,6 @@ def search_routes(start_station, end_station, date, time):
       The name of the start station
     end_station : string
       The name of the end station
-    date : string
-        The date in the format YYYY-MM-DD
-    time : string
-        The time in the format HH:MM
 
     Returns
     -------
@@ -96,7 +92,7 @@ def register_user():
     cursor = con.cursor()
     print("\n Register as a user")
     cursor.execute("SELECT COUNT(*) from Kunde")
-    KundeID=cursor.fetchone()[0]+1
+    KundeID = cursor.fetchone()[0]+1
     cursor.execute(""" 
     INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
     VALUES (?,?,?,?)      
@@ -106,9 +102,35 @@ def register_user():
     con.close
 
 
+def get_dates_for_togrute(cursor, togrute_navn):
+    """
+    This function returns all dates of departure for a given train route
+
+    Parameters
+    ----------
+    cursor : cursor
+      A cursor object that allows access to the DB
+    togrute_navn : string
+      The name of given train route
+
+    Returns
+    -------
+    List[string]
+      A list consisting of dates
+    """
+    # Execute script for retrieving all dates related to a given train route
+    cursor.execute(
+        "SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
+
+    # All first rows are dates for the given train route
+    dates = [row[0] for row in cursor.fetchall()]
+
+    # Return all dates
+    return dates
+
 
 def check_user_story_a():
-    #This function is used to test user story a)
+    """This function is used to test user story a)"""
 
     cursor.execute("SELECT * FROM Banestrekning")
     banestrekningrows = cursor.fetchall()
@@ -118,7 +140,7 @@ def check_user_story_a():
 
 
 def check_user_story_b():
-    #This function is used to test user story b)
+    """This function is used to test user story b)"""
 
     cursor.execute("SELECT * FROM Togrute")
     togruterows = cursor.fetchall()
@@ -126,27 +148,6 @@ def check_user_story_b():
     for togrute in togruterows:
         print(togrute)
 
-def check_user_story_c():
-    #This function is used to test user story c)
-
-    station_name = get_station_name()
-    weekday = get_weekday()
-
-    # print results
-    print(
-        f"\nThe following routes stop at {station_name} on weekday number {weekday}:")
-
-def check_user_story_d():
-    print("\nSearch Routes")
-    start = start_station()
-    end = end_station()
-    d = date()
-    t = time()
-    routes = search_routes(start, end, d, t)
-    return routes
-
-def check_user_story_e():
-    pass
 
 def check_user_story_f():
     pass

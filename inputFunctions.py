@@ -3,9 +3,8 @@ def get_station_name():
     return station_name
     
 def get_weekday():
-    weekday = int(input("Enter weekday number (e.g., Sunday = 0, Monday = 1, etc.): "))
+    weekday = input("Enter weekday number (e.g., Sunday = 0, monday = 1 etc.): ")
     return weekday
-
 
 def start_station():
     startstasjon = input("Enter starting station: ")
@@ -24,20 +23,13 @@ def time():
     return time
 
 def get_name():
-    name = input("Enter your name: ")
+    name= input("Enter your name: ")
     return name
 
 def get_e_mail():
-    email = input("Enter your email: ")
-    return email
+    e_mail= input("Enter your e-mail: ")
+    return e_mail
 
 def get_phone_number():
-    phone = input("Enter your phone number: ")
-    return phone
-
-def get_vogn_type():
-    vogn_type = input("Enter type of vogn ('sittevogn' or 'sovevogn'): ")
-    while vogn_type not in ['sittevogn', 'sovevogn']:
-        print("Invalid vogn type. Please enter 'sittevogn' or 'sovevogn'")
-        vogn_type = input("Enter type of vogn ('sittevogn' or 'sovevogn'): ")
-    return vogn_type
+    phone_number=input("Enter your phone number")
+    return phone_number

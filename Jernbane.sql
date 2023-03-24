@@ -66,13 +66,13 @@ CREATE TABLE Banestrekning (
 CREATE TABLE Delstrekning (
 	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
 	"LengdeIkm"	INT NOT NULL,
-	"HarDobbbeltspor" BOOLEAN NOT NULL
+	"HarDobbbeltspor" TEXT NOT NULL
 );
 
 CREATE TABLE Vogn (
 	"VognID" INT PRIMARY KEY,
 	"Navn"	TEXT NOT NULL,
-	"TilgjengeligForBruk" BOOLEAN NOT NULL,
+	"TilgjengeligForBruk" TEXT NOT NULL,
 	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
