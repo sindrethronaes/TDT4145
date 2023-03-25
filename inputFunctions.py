@@ -6,19 +6,19 @@ def get_weekday():
     weekday = input("Enter weekday number (e.g., Sunday = 0, monday = 1 etc.): ")
     return weekday
 
-def start_station():
+def get_start_station():
     startstasjon = input("Enter starting station: ")
     return startstasjon
 
-def end_station():
+def get_end_station():
     end_station = input("Enter ending station: ")
     return end_station
 
-def date():
+def get_date():
     date = input("Enter date (YYYY-MM-DD): ")
     return date
 
-def time():
+def get_time():
     time = input("Enter time (HH:MM): ")
     return time
 
@@ -31,5 +31,5 @@ def get_e_mail():
     return e_mail
 
 def get_phone_number():
-    phone_number=input("Enter your phone number")
+    phone_number=input("Enter your phone number: ")
     return phone_number

@@ -27,15 +27,15 @@ CREATE TABLE Stasjon (
 );
 
 CREATE TABLE DelstrekningIHovedretning (
-	"DelstrekningID" TEXT PRIMARY KEY REFERENCES Delstrekning(DelstrekningID),
+	"DelstrekningID" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"Startstasjon"	TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
 	"Endestasjon" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn)
 );
 
 CREATE TABLE Togrute (
-	"TogruteNavn"	TEXT NOT NULL,
-	"Dato" DATE NULL NULL REFERENCES Dato(Dato),
-	"DelstrekningID"	TEXT NOT NULL REFERENCES DelstrekningIHovedretning(DelstrekningID),
+	"TogruteNavn" TEXT NOT NULL,
+	"Dato" DATE NOT NULL REFERENCES Dato(Dato),
+	"DelstrekningID" INT NOT NULL REFERENCES Delstrekning(DelstrekningID),
 	PRIMARY KEY ("TogruteNavn", "Dato")
 );
 
@@ -64,16 +64,14 @@ CREATE TABLE Banestrekning (
 );
 
 CREATE TABLE Delstrekning (
-	"DelstrekningID" TEXT NOT NULL PRIMARY KEY,
+	"DelstrekningID" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"LengdeIkm"	INT NOT NULL,
 	"HarDobbbeltspor" TEXT NOT NULL
 );
 
 CREATE TABLE Vogn (
-	"VognID" INT PRIMARY KEY,
+	"VognID" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"Navn"	TEXT NOT NULL,
-	"TilgjengeligForBruk" TEXT NOT NULL,
-	"NummerIVognsammensetning" INT,
 	"VognType" TEXT NOT NULL,
 	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
 );
@@ -141,7 +139,7 @@ CREATE TABLE BillettISovevogn (
 );
 
 CREATE TABLE Rutestopp (
-    "TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
+    "TogruteNavn" TEXT NOT NULL REFERENCES TogRute(TogRuteNavn),
     "StasjonNavn" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
     "Avgang" TIME,
     "Ankomst" TIME,

@@ -1,7 +1,6 @@
 import sqlite3
-from prettytable import PrettyTable
 from initDB import initDB
-from inputFunctions import start_station, end_station, date, time, get_phone_number, get_e_mail, get_name
+from inputFunctions import *
 
 # Creates a connection to our database
 con = sqlite3.connect("TogDB.db")
@@ -13,81 +12,40 @@ cursor = con.cursor()
 initDB()
 
 
-def search_routes(start_station, end_station, date, time):
-    """
-    This function returns all train routes that occurs on a given date and time in between
-    a start station and and end station. Necessary for user story d).
+def get_train_routes_by_station_and_day(station_name, day_of_week):
+    cursor.execute("""
+        SELECT TogRute.TogRuteNavn
+        FROM TogRute, Rutestopp, Dato
+        WHERE Rutestopp.StasjonNavn = ? AND
+        TogRute.TogRuteNavn = Rutestopp.TogruteNavn AND
+        TogRute.Dato = Dato.Dato AND
+        Dato.Ukedag = ?;
+    """, (station_name, f"%{day_of_week}%"))
 
-    Parameters
-    ----------
-    start_station : string
-      The name of the start station
-    end_station : string
-      The name of the end station
+    train_routes = cursor.fetchall()
 
-    Returns
-    -------
-    List[string]
-      A list consisting of train routes
-    """
-
-    conn = sqlite3.connect('TogDB.db')
-    c = conn.cursor()
-
-    # Constructs the SQL query to join the Togrute and Rutestopp tables
-    # to get all routes between the start and end stations
-    query = """
-        SELECT r.TogruteNavn, rs.Avgang, rs.Ankomst
-        FROM Togrute r
-        JOIN Rutestopp rs ON r.TogruteNavn = rs.TogruteNavn
-        WHERE rs.StasjonNavn = ? AND r.TogruteNavn IN
-            (SELECT TogruteNavn
-             FROM Rutestopp
-             WHERE StasjonNavn = ?)
-    """
-
-    def get_dates_for_togrute(cursor, togrute_navn):
-        cursor.execute(
-            "SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
-        dates = [row[0] for row in cursor.fetchall()]
-        return dates
-
-    # Get all the results and filter by date and time
-    routes = []
-    for row in c.execute(query, (start_station, end_station)):
-        togrute_navn, avgang, ankomst = row
-        if date in get_dates_for_togrute(c, togrute_navn) and avgang >= time:
-            routes.append((togrute_navn, avgang, ankomst))
-
-    # Sort the routes by time
-    sorted_routes = sorted(routes, key=lambda x: x[1])
-
-    conn.close()
-
-    # Print the results in a table format
-    if sorted_routes:
-        table = PrettyTable()
-        table.field_names = ['Train Route', 'Departure Time', 'Arrival Time']
-        for route in sorted_routes:
-            table.add_row(route)
-        print(table)
-    else:
-        print("No routes found.")
-
-    return sorted_routes if sorted_routes else []
+    return train_routes
 
 
-def search_routes_menu():
-    print("\nSearch Routes")
-    start = start_station()
-    end = end_station()
-    d = date()
-    t = time()
-    routes = search_routes(start, end, d, t)
-    return routes
+def get_train_routes(start_station, end_station, date, time):
+    cursor.execute("""
+        SELECT TogRute.TogruteNavn
+        FROM Togrute, Rutestopp AS StartStopp, Rutestopp AS EndStopp
+        WHERE StartStopp.StasjonNavn = ? AND
+        EndStopp.StasjonNavn = ? AND
+        Togrute.TogruteNavn = StartStopp.TogruteNavn AND
+        Togrute.TogruteNavn = EndStopp.TogruteNavn AND
+        StartStopp.Avgang >= ? AND
+        StartStopp.Avgang < EndStopp.Ankomst AND
+        Togrute.Dato BETWEEN ? AND ? + 1
+        ORDER BY StartStopp.Avgang;
+    """, (start_station, end_station, time, date, date))
+    
+    train_routes = cursor.fetchall()
 
+    return train_routes
 
-def register_user():
+def register_user(name, e_mail, phone_number):
     con = sqlite3.connect("TogDB.db")
     cursor = con.cursor()
     print("\n Register as a user")
@@ -96,37 +54,9 @@ def register_user():
     cursor.execute(""" 
     INSERT INTO Kunde(KundeID, Navn, Epost, Nummer)
     VALUES (?,?,?,?)      
-    """, (KundeID, get_name(), get_e_mail(), get_phone_number()))
+    """, (KundeID, name, e_mail, phone_number))
     con.commit()
     print("new user added")
-    con.close
-
-
-def get_dates_for_togrute(cursor, togrute_navn):
-    """
-    This function returns all dates of departure for a given train route
-
-    Parameters
-    ----------
-    cursor : cursor
-      A cursor object that allows access to the DB
-    togrute_navn : string
-      The name of given train route
-
-    Returns
-    -------
-    List[string]
-      A list consisting of dates
-    """
-    # Execute script for retrieving all dates related to a given train route
-    cursor.execute(
-        "SELECT Dato FROM DatoerForTogruter WHERE Togrutenavn = ?", (togrute_navn,))
-
-    # All first rows are dates for the given train route
-    dates = [row[0] for row in cursor.fetchall()]
-
-    # Return all dates
-    return dates
 
 
 def check_user_story_a():
@@ -149,12 +79,53 @@ def check_user_story_b():
         print(togrute)
 
 
+def check_user_story_c():
+    """This function is used to test user story c)"""
+
+    station_name = get_station_name()
+    # You can use Norwegian days like "Mandag" if your data is in Norwegian
+    day_of_week = get_weekday()
+    train_routes = get_train_routes_by_station_and_day(
+        station_name, day_of_week)
+    print(f"Train routes passing through {station_name} on {day_of_week}:")
+    for train_route in train_routes:
+        print(train_route[0])
+
+
+def check_user_story_d():
+    """This function is used to test user story d)"""
+    
+    start_station = get_station_name()
+    end_station = get_station_name()
+    date = get_date()
+    time = get_time()
+    train_routes = get_train_routes(start_station, end_station, date, time)
+    print(f"Train routes from {start_station} to {end_station} on {date} at {time}:")
+    for train_route in train_routes:
+        print(train_route[0])
+
+
+def check_user_story_e():
+    """This function is used to test user story e)"""
+    name = get_name()
+    e_mail = get_e_mail()
+    phone_number = get_phone_number()
+    register_user(name, e_mail, phone_number)
+
+    cursor.execute("SELECT * FROM Kunde")
+    kunderows = cursor.fetchall()
+    print("All rows from table Kunde:")
+    for kunde in kunderows:
+        print(kunde)
+
+
 def check_user_story_f():
     pass
+
 
 def check_user_story_g():
     pass
 
-# Run python main.py purchases <customer_id> in the terminal to see the upcoming purchases for a customer
+
 def check_user_story_h():
     pass
