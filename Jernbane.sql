@@ -1,7 +1,6 @@
 -- Deletes DB if it already exists
 DROP TABLE IF EXISTS Banestrekning;
-DROP TABLE IF EXISTS BillettISittevogn;
-DROP TABLE IF EXISTS BillettISovevogn;
+DROP TABLE IF EXISTS Billett;
 DROP TABLE IF EXISTS Dato;
 DROP TABLE IF EXISTS Delstrekning;
 DROP TABLE IF EXISTS DelstrekningIHovedretning;

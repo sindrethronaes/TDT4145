@@ -115,36 +115,33 @@ def populateDB():
     cursor.execute(
         "INSERT INTO Dato(Dato, Ukedag) VALUES ('2023-04-04', 'Tirsdag')")
 
-    # Inserts information regarding Vogn, Sovevogn, Sittevogn (10 of each)
-    for i in range(1, 11):
-        cursor.execute("INSERT INTO Vogn(Navn, VognType, OperatoerNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'SJ Norge AS' )")
+    # Inserts information regarding Vogn, Sovevogn, Sittevogn to the togrute
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'dagtog fra trondheim til bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'nattog fra trondheim til bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'morgentog fra mo i rana til trondheim' )")
 
-    for i in range(11, 21):
-        cursor.execute("INSERT INTO Vogn(Navn, VognType, OperatoerNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'SJ Norge AS' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'dagtog fra trondheim til bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'nattog fra trondheim til bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'morgentog fra mo i rana til trondheim' )")
 
     # Inserts information regarding seats (12 seats per car)
-    for i in range(1, 11):
-        for j in range(1, 13):
-            cursor.execute(
-                "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerRad) VALUES (?, ?, 4)",
-                (str(uuid.uuid4()), j)
-            )
-
+    for i in range(1, 4):
+        cursor.execute(
+            "INSERT INTO Sittevogn(VognID, AntallSeter, SeterPerRad) VALUES (?, 12, 4)", (i,))
 
     # Inserts information regarding beds (8 beds per car)
-    for i in range(11, 21):
-        for j in range(1, 9):
-            cursor.execute(
-                "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, ?, 2)", (str(uuid.uuid4()), j))
+    for i in range(4, 8):
+        cursor.execute(
+            "INSERT INTO Sovevogn(VognID, AntallSenger, SengerPerKupe) VALUES (?, 8, 2)", (i,))
 
     # Inserts information regarding Kupe
-    for i in range(11, 21):
+    for i in range(4, 8):
             for j in range(1, 5):
                 cursor.execute(
                     "INSERT INTO Kupe(KupeID, VognID, Tilgjengelig) VALUES (?, ? , 1)", (j, i))
 
-    # Inserts information regarding Seng (8 Beds in total per Kupe)
-    for k in range(11, 21):
+    # Inserts information regarding Seng (2 bed per kupe, 8 Beds in total per sovevogn)
+    for k in range(4, 8):
             for i in range(1, 5):
                 for j in range(1, 3):
                     cursor.execute(
@@ -152,7 +149,7 @@ def populateDB():
 
 
     # Inserts information regarding Sete (12 Seats in total per Vogn)
-    for i in range(1, 11):
+    for i in range(1, 4):
         for j in range(1, 13):
             cursor.execute(
                 "INSERT INTO Sete(SeteID, VognID, Tilgjengelig) VALUES (?, ?, 1)", (j, i))

@@ -69,7 +69,7 @@ def get_user_id_by_name_or_phone(name=None, phone=None):
             query = 'SELECT KundeID FROM Kunde WHERE Navn = ?'
             cursor.execute(query, (name,))
         elif phone:
-            query = 'SELECT KundeID FROM Kunde WHERE Telefonnummer = ?'
+            query = 'SELECT KundeID FROM Kunde WHERE Nummer = ?'
             cursor.execute(query, (phone,))
         
         result = cursor.fetchone()
