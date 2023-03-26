@@ -1,9 +1,9 @@
 def get_station_name():
-    station_name = input("Enter station name: ")
+    station_name = input("Enter Station Name: ")
     return station_name
     
 def get_weekday():
-    weekday = input("Enter weekday number (e.g., Sunday = 0, monday = 1 etc.): ")
+    weekday = input("Enter Weekday: ")
     return weekday
 
 def get_start_station():

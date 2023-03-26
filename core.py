@@ -21,7 +21,7 @@ def get_train_routes_by_station_and_day(station_name, day_of_week):
         TogRute.TogRuteNavn = Rutestopp.TogruteNavn AND
         TogRute.Dato = Dato.Dato AND
         Dato.Ukedag = ?;
-    """, (station_name, f"%{day_of_week}%"))
+    """, (station_name, day_of_week))
 
     train_routes = cursor.fetchall()
 
@@ -127,9 +127,13 @@ def check_user_story_c():
     day_of_week = get_weekday()
     train_routes = get_train_routes_by_station_and_day(
         station_name, day_of_week)
-    print(f"Train routes passing through {station_name} on {day_of_week}:")
-    for train_route in train_routes:
-        print(train_route[0])
+    print("\n")
+    print(f"Train routes passing through {station_name} on {day_of_week}: \n")
+    if len(train_routes) != 0:
+        for train_route in train_routes:
+            print(train_route[0])
+    else:
+        print("No Routes Available")
 
 
 def check_user_story_d():

@@ -11,7 +11,7 @@ cursor = con.cursor()
 
 # Populate the database with necessary data
 populateDB()
-
+"""
 # Used to test user story a)
 check_user_story_a()
 print("\n")
@@ -19,9 +19,10 @@ print("\n")
 # Used to test user story b)
 check_user_story_b()
 print("\n")
+"""
 
 # Used to test user story c)
-#check_user_story_c()
+check_user_story_c()
 print("\n")
 """
 # Used to test user story d)
