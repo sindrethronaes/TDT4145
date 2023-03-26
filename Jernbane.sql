@@ -143,8 +143,7 @@ CREATE TABLE Billett (
 CREATE TABLE Rutestopp (
     "TogruteNavn" TEXT NOT NULL REFERENCES TogRute(TogRuteNavn),
     "StasjonNavn" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
-    "Avgang" TIME,
-    "Ankomst" TIME,
+    "AvgangAnkomst" TIME,
     PRIMARY KEY ("TogruteNavn", "StasjonNavn")
 );
 

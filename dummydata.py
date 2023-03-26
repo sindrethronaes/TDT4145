@@ -20,7 +20,7 @@ def populateDB():
 
     # Insert information about Stasjoner
     cursor.execute("INSERT INTO Stasjon VALUES ('Trondheim', 5.1)")
-    cursor.execute("INSERT INTO Stasjon VALUES ('Steinskjer', 3.6)")
+    cursor.execute("INSERT INTO Stasjon VALUES ('Steinkjer', 3.6)")
     cursor.execute("INSERT INTO Stasjon VALUES ('Mosjøen', 6.8)")
     cursor.execute("INSERT INTO Stasjon VALUES ('Mo i Rana', 3.5)")
     cursor.execute("INSERT INTO Stasjon VALUES ('Fauske', 34.0)")
@@ -36,21 +36,21 @@ def populateDB():
     # USER STORY b)
     # Insert data for day train from Trondheim to Bodø into Togrute and Rutestopp
     cursor.execute(
-        "INSERT INTO Togrute(TogruteNavn,Dato, DelstrekningID) VALUES ('dagtog fra trondheim til bodø', '2023-04-03', 1)")
+        "INSERT INTO Togrute(TogruteNavn,Dato, DelstrekningID) VALUES ('dagtog fra Trondheim til Bodø', '2023-04-03', 1)")
     cursor.execute(
-        "INSERT INTO Togrute(TogruteNavn,Dato, DelstrekningID) VALUES ('dagtog fra trondheim til bodø', '2023-04-04', 1)")
+        "INSERT INTO Togrute(TogruteNavn,Dato, DelstrekningID) VALUES ('dagtog fra Trondheim til Bodø', '2023-04-04', 1)")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Trondheim S', '07:49', 'NULL')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Trondheim S', '07:49')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Steinkjer', '09:51', '09:51')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Steinkjer', '09:51')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Mosjøen', '13:20', '13:20')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Mosjøen', '13:20')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Mo i Rana', '14:31', '14:31')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Mo i Rana', '14:31')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Fauske', '16:49', '16:49')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Fauske', '16:49')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('dagtog fra trondheim til bodø', 'Bodø', 'NULL', '17:34')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('dagtog fra Trondheim til Bodø', 'Bodø', '17:34')")
 
     # USER STORY b)
     # Insert data for night train fra Trondheim to Bodø into Togrute and Rutestopp
@@ -59,18 +59,17 @@ def populateDB():
     cursor.execute(
         "INSERT INTO Togrute(TogruteNavn, Dato, DelstrekningID) VALUES ('nattog fra Trondheim til Bodø', '2023-04-04', 1)")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Trondheim S', '23:05', 'NULL')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Trondheim S', '23:05')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Steinkjer', '00:57', '00:57')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Steinkjer', '00:57')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Mosjøen', '04:41', '04:41')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Mosjøen', '04:41')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Mo i Rana', '05:55', '05:55')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Mo i Rana', '05:55')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Fauske', '08:19', '08:19')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Fauske', '08:19')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('nattog fra Trondheim til Bodø', 'Bodø', 'NULL', '09:05')")
-
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('nattog fra Trondheim til Bodø', 'Bodø', '09:05')")
     # USER STORY b)
     # Inserts data for morning train from Mo i Rana to Trondheim into Togrute and Rutestopp
     cursor.execute(
@@ -78,11 +77,11 @@ def populateDB():
     cursor.execute(
         "INSERT INTO Togrute(TogruteNavn, Dato, DelstrekningID) VALUES ('morgentog fra Mo i Rana til Trondheim', '2023-04-04', 2)")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Mo i Rana', '08:11', 'NULL')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Mo i Rana', '08:11')")
     cursor.execute(
-        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Mosjøen', '09:14', '09:14')")
-    cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Steinkjer', '12:31', '12:31')")
-    cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, Avgang, Ankomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Trondheim S', 'NULL', '14:13')")
+        "INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Mosjøen', '09:14')")
+    cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Steinkjer', '12:31')")
+    cursor.execute("INSERT INTO Rutestopp(TogruteNavn, StasjonNavn, AvgangAnkomst) VALUES ('morgentog fra Mo i Rana til Trondheim', 'Trondheim S', '14:13')")
 
     # USER STORY f)
     # Inserts information regarding Operatører

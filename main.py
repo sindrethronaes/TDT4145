@@ -14,24 +14,32 @@ populateDB()
 
 # Used to test user story a)
 check_user_story_a()
+print("\n")
 
 # Used to test user story b)
 check_user_story_b()
+print("\n")
 
 # Used to test user story c)
-check_user_story_c()
-
+#check_user_story_c()
+print("\n")
+"""
 # Used to test user story d)
 check_user_story_d()
+print("\n")
 
 # Used to test user story e)
 check_user_story_e()
+print("\n")
 
 # Used to test user story g)
 check_user_story_g()
+print("\n")
 
 # Used to test user story h)
 check_user_story_h()
+print("\n")
+"""
 
 #Save changes to database
 con.commit()

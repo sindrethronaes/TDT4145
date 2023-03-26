@@ -41,10 +41,11 @@ def get_train_routes(start_station, end_station, date, time):
         Togrute.Dato BETWEEN ? AND ? + 1
         ORDER BY StartStopp.Avgang;
     """, (start_station, end_station, time, date, date))
-    
+
     train_routes = cursor.fetchall()
 
     return train_routes
+
 
 def register_user(name, e_mail, phone_number):
     con = sqlite3.connect("TogDB.db")
@@ -60,7 +61,6 @@ def register_user(name, e_mail, phone_number):
     print("new user added")
 
 
-
 def get_user_id_by_name_or_phone(name=None, phone=None):
     if name:
         query = 'SELECT KundeID FROM Kunde WHERE Navn = ?'
@@ -68,13 +68,14 @@ def get_user_id_by_name_or_phone(name=None, phone=None):
     elif phone:
         query = 'SELECT KundeID FROM Kunde WHERE Nummer = ?'
         cursor.execute(query, (phone,))
-        
+
     result = cursor.fetchone()
 
     if result:
         return result[0]
     else:
         return None
+
 
 def get_user_by_phone_number(phone_number):
     cursor.execute("SELECT * FROM Kunde WHERE Nummer=?", (phone_number,))
@@ -85,26 +86,42 @@ def get_user_by_phone_number(phone_number):
 def check_user_story_a():
     """This function is used to test user story a)"""
 
+    print("USER STORY A")
     cursor.execute("SELECT * FROM Banestrekning")
     banestrekningrows = cursor.fetchall()
-    print("All rows from table Banestrekning:")
     for banestrekning in banestrekningrows:
-        print(banestrekning)
+        cursor.execute("SELECT SUM(LengdeIKm) FROM Delstrekning")
+        totalLength = cursor.fetchall()
+        # Underneath line includes just a lot of formatting in order to look "pretty" in terminal output
+        print(f'"{banestrekning[1]}" has fuel fource "{banestrekning[2]}",\nwith total length {str(totalLength[0]).replace("(", "").replace(")", "").replace(",", "")}km,\nand includes the following stations:')
+        cursor.execute("SELECT * FROM Stasjon")
+        stasjonsrows = cursor.fetchall()
+        for stasjon in stasjonsrows:
+            print(f"{stasjon[0]} | {stasjon[1]} Moh")
 
 
 def check_user_story_b():
     """This function is used to test user story b)"""
 
+    print("USER STORY B")
     cursor.execute("SELECT * FROM Togrute")
     togruterows = cursor.fetchall()
-    print("All rows from table Togrute:")
-    for togrute in togruterows:
-        print(togrute)
+    print("3 Routes Are Available:")
+    for i in range(0, len(togruterows), 2):
+        print("\n")
+        cursor.execute(
+            "SELECT * FROM RUTESTOPP WHERE Rutestopp.TogruteNavn = ?", (togruterows[i][0],))
+        rutestopprows = reversed(cursor.fetchall())
+        print(str(togruterows[i][0]) +
+              f" departs on the {str(togruterows[i][1])} and has the following schedule: ")
+        for rutestopp in rutestopprows:
+            print(rutestopp[1] + " | " + rutestopp[2])
 
 
 def check_user_story_c():
     """This function is used to test user story c)"""
 
+    print("USER STORY C")
     station_name = get_station_name()
     # You can use Norwegian days like "Mandag" if your data is in Norwegian
     day_of_week = get_weekday()
@@ -117,13 +134,14 @@ def check_user_story_c():
 
 def check_user_story_d():
     """This function is used to test user story d)"""
-    
+
     start_station = get_station_name()
     end_station = get_station_name()
     date = get_date()
     time = get_time()
     train_routes = get_train_routes(start_station, end_station, date, time)
-    print(f"Train routes from {start_station} to {end_station} on {date} at {time}:")
+    print(
+        f"Train routes from {start_station} to {end_station} on {date} at {time}:")
     for train_route in train_routes:
         print(train_route[0])
 
@@ -143,11 +161,14 @@ def check_user_story_e():
 
 
 current_user = None
+
+
 def check_user_story_g():
     global current_user
 
     while not current_user:
-        choice = input("Enter 'login' to log in, 'register' to register, or 'guest' to continue as a guest: ").lower()
+        choice = input(
+            "Enter 'login' to log in, 'register' to register, or 'guest' to continue as a guest: ").lower()
         if choice == 'login':
             phone_number = get_phone_number()
             current_user = get_user_by_phone_number(phone_number)
@@ -198,22 +219,31 @@ def check_user_story_g():
         print(f"VognID: {bed[0]}, KupeID: {bed[1]}, SengID: {bed[2]}")
 
     # Get user input for selected ticket (seat or bed)
-    ticket_type = input("Enter 'seat' to purchase a seat or 'bed' to purchase a bed: ")
+    ticket_type = input(
+        "Enter 'seat' to purchase a seat or 'bed' to purchase a bed: ")
     if ticket_type.lower() == 'seat':
-        vogn_id = int(input("Enter the VognID for the seat you want to purchase: "))
-        sete_id = int(input("Enter the SeteID for the seat you want to purchase: "))
+        vogn_id = int(
+            input("Enter the VognID for the seat you want to purchase: "))
+        sete_id = int(
+            input("Enter the SeteID for the seat you want to purchase: "))
 
-        cursor.execute("UPDATE Sete SET Tilgjengelig = 0 WHERE SeteID = ? AND VognID = ?", (sete_id, vogn_id))
+        cursor.execute(
+            "UPDATE Sete SET Tilgjengelig = 0 WHERE SeteID = ? AND VognID = ?", (sete_id, vogn_id))
         con.commit()
         print("Seat purchased successfully!")
 
     elif ticket_type.lower() == 'bed':
-        vogn_id = int(input("Enter the VognID for the bed you want to purchase: "))
-        kupe_id = int(input("Enter the KupeID for the bed you want to purchase: "))
-        seng_id = int(input("Enter the SengID for the bed you want to purchase: "))
+        vogn_id = int(
+            input("Enter the VognID for the bed you want to purchase: "))
+        kupe_id = int(
+            input("Enter the KupeID for the bed you want to purchase: "))
+        seng_id = int(
+            input("Enter the SengID for the bed you want to purchase: "))
 
-        cursor.execute("UPDATE Seng SET Tilgjengelig = 0 WHERE SengID = ? AND KupeID = ? AND VognID = ?", (seng_id, kupe_id, vogn_id))
-        cursor.execute("INSERT INTO KundeOrdre (Ordre.ID, KundeID, BillettID, Dato, TogruteNavn, AntallBilletter) VALUES (1, ?, 1, ?, ?, ?)", (current_user[0], '2023-04-03', train_route, 1))
+        cursor.execute(
+            "UPDATE Seng SET Tilgjengelig = 0 WHERE SengID = ? AND KupeID = ? AND VognID = ?", (seng_id, kupe_id, vogn_id))
+        cursor.execute("INSERT INTO KundeOrdre (Ordre.ID, KundeID, BillettID, Dato, TogruteNavn, AntallBilletter) VALUES (1, ?, 1, ?, ?, ?)",
+                       (current_user[0], '2023-04-03', train_route, 1))
         con.commit()
         print("Bed purchased successfully!")
     else:
