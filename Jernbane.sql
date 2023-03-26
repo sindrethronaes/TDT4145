@@ -35,6 +35,7 @@ CREATE TABLE Togrute (
 	"TogruteNavn" TEXT NOT NULL,
 	"Dato" DATE NOT NULL REFERENCES Dato(Dato),
 	"DelstrekningID" INT NOT NULL REFERENCES Delstrekning(DelstrekningID),
+	"KjoeresNaar" TEXT NOT NULL,
 	PRIMARY KEY ("TogruteNavn", "Dato")
 );
 

@@ -14,18 +14,28 @@ initDB()
 
 
 def get_train_routes_by_station_and_day(station_name, day_of_week):
-    cursor.execute("""
-        SELECT TogRute.TogRuteNavn
-        FROM TogRute, Rutestopp, Dato
-        WHERE Rutestopp.StasjonNavn = ? AND
-        TogRute.TogRuteNavn = Rutestopp.TogruteNavn AND
-        TogRute.Dato = Dato.Dato AND
-        Dato.Ukedag = ?;
-    """, (station_name, day_of_week))
+    dayLetter = day_of_week.upper()[0]
+    cursor.execute("SELECT TogRute.KjoeresNaar, TogRute.TogruteNavn FROM TogRute, Rutestopp WHERE Rutestopp.StasjonNavn = ? AND TogRute.TogRuteNavn = Rutestopp.TogruteNavn", (station_name,))
+    weekdays = cursor.fetchall()
+    kjoeresNaar = ""
+    routes = []
+    uniqueRoutes = set()
+    for dayslist in weekdays:
+        if dayLetter in dayslist[0]:
+            kjoeresNaar = dayslist[0]
+            routes.append(dayslist[1])
+            uniqueRoutes = set(routes)
 
-    train_routes = cursor.fetchall()
+    #cursor.execute("""
+        #SELECT Togrute.TogRuteNavn
+        #FROM TogRute, Rutestopp
+        #WHERE Rutestopp.StasjonNavn = ? AND
+        #TogRute.TogRuteNavn = Rutestopp.TogruteNavn AND TogRute.KjoeresNaar = ?;
+    #""", (station_name, kjoeresNaar[0]))
 
-    return train_routes
+    #train_routes = set(cursor.fetchall())
+
+    return uniqueRoutes #train_routes
 
 
 def get_train_routes(start_station, end_station, date, time):
@@ -127,11 +137,10 @@ def check_user_story_c():
     day_of_week = get_weekday()
     train_routes = get_train_routes_by_station_and_day(
         station_name, day_of_week)
-    print("\n")
-    print(f"Train routes passing through {station_name} on {day_of_week}: \n")
+    print(f"Train routes passing through {station_name} on {day_of_week}:")
     if len(train_routes) != 0:
         for train_route in train_routes:
-            print(train_route[0])
+            print(train_route)
     else:
         print("No Routes Available")
 
