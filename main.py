@@ -26,8 +26,8 @@ check_user_story_c()
 print("\n")
 
 # Used to test user story d)
-# check_user_story_d()
-# print("\n")
+check_user_story_d()
+print("\n")
 
 # Used to test user story e)
 check_user_story_e()

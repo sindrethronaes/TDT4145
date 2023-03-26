@@ -151,19 +151,29 @@ def check_user_story_c():
 
 def check_user_story_d():
     """This function is used to test user story d)"""
-
-    print("USER STORY D")
-    print("For start station, ")
-    start_station = get_station_name()
-    print("For end station, ")
-    end_station = get_station_name()
+    start_station = get_start_station()
+    end_station = get_end_station()
     date = get_date()
     time = get_time()
-    train_routes = get_train_routes(start_station, end_station, date, time)
-    print(
-        f"Train routes from {start_station} to {end_station} on {date} at {time}:")
-    for train_route in train_routes:
-        print(train_route[0])
+
+    # Convert date and time to datetime objects
+    date_time = datetime.datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
+    next_day = date_time + datetime.timedelta(days=1)
+
+    # Search for train routes in the specified date range
+    cursor.execute("""
+        SELECT t.TogruteNavn, t.Dato, r1.AvgangAnkomst AS DepartureTime, r2.AvgangAnkomst AS ArrivalTime
+        FROM Togrute t
+        JOIN Rutestopp r1 ON t.TogruteNavn = r1.TogruteNavn AND r1.StasjonNavn = ?
+        JOIN Rutestopp r2 ON t.TogruteNavn = r2.TogruteNavn AND r2.StasjonNavn = ?
+        WHERE t.Dato >= ? AND t.Dato <= ?
+        ORDER BY t.Dato ASC, r1.AvgangAnkomst ASC
+    """, (start_station, end_station, date_time.date(), next_day.date()))
+
+    # Print the matching train routes
+    print(f"Train routes from {start_station} to {end_station} on {date} and the next day:")
+    for row in cursor.fetchall():
+        print(row)
 
 
 def check_user_story_e():
