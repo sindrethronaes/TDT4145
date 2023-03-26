@@ -117,12 +117,12 @@ def populateDB():
 
     # Inserts information regarding Vogn, Sovevogn, Sittevogn to the togrute
     cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'dagtog fra trondheim til bodø' )")
-    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'nattog fra trondheim til bodø' )")
-    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'morgentog fra mo i rana til trondheim' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'nattog fra Trondheim til Bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sittevogn', 'SJ-sittevogn-1', 'morgentog fra Mo i Rana til Trondheim' )")
 
     cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'dagtog fra trondheim til bodø' )")
-    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'nattog fra trondheim til bodø' )")
-    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'morgentog fra mo i rana til trondheim' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'nattog fra Trondheim til Bodø' )")
+    cursor.execute("INSERT INTO Vogn(Navn, VognType, TogRuteNavn) VALUES ('Sovevogn', 'SJ-sovevogn-1', 'morgentog fra Mo i Rana til Trondheim' )")
 
     # Inserts information regarding seats (12 seats per car)
     for i in range(1, 4):

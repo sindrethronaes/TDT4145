@@ -62,23 +62,24 @@ def register_user(name, e_mail, phone_number):
 
 
 def get_user_id_by_name_or_phone(name=None, phone=None):
-    with sqlite3.connect("TogDB.db") as conn:
-        cursor = conn.cursor()
-
-        if name:
-            query = 'SELECT KundeID FROM Kunde WHERE Navn = ?'
-            cursor.execute(query, (name,))
-        elif phone:
-            query = 'SELECT KundeID FROM Kunde WHERE Nummer = ?'
-            cursor.execute(query, (phone,))
+    if name:
+        query = 'SELECT KundeID FROM Kunde WHERE Navn = ?'
+        cursor.execute(query, (name,))
+    elif phone:
+        query = 'SELECT KundeID FROM Kunde WHERE Nummer = ?'
+        cursor.execute(query, (phone,))
         
-        result = cursor.fetchone()
+    result = cursor.fetchone()
 
-        if result:
-            return result[0]
-        else:
-            return None
+    if result:
+        return result[0]
+    else:
+        return None
 
+def get_user_by_phone_number(phone_number):
+    cursor.execute("SELECT * FROM Kunde WHERE Nummer=?", (phone_number,))
+    user = cursor.fetchone()
+    return user
 
 
 def check_user_story_a():
@@ -140,8 +141,32 @@ def check_user_story_e():
     for kunde in kunderows:
         print(kunde)
 
+
+current_user = None
 def check_user_story_g():
-    # Get user input for train route
+    global current_user
+
+    while not current_user:
+        choice = input("Enter 'login' to log in, 'register' to register, or 'guest' to continue as a guest: ").lower()
+        if choice == 'login':
+            phone_number = get_phone_number()
+            current_user = get_user_by_phone_number(phone_number)
+            if not current_user:
+                print("User not found. Please try again.")
+            else:
+                print("Logged in successfully!")
+        elif choice == 'register':
+            name = get_name()
+            e_mail = get_e_mail()
+            phone_number = get_phone_number()
+            register_user(name, e_mail, phone_number)
+        else:
+            print("Invalid choice. Please try again.")
+
+    # User is logged in or provided their name and phone number, continue with the ticket purchase process
+    # ...
+
+     # Get user input for train route
     train_route = input("Enter the train route name: ")
 
     # Query available seats
@@ -188,6 +213,7 @@ def check_user_story_g():
         seng_id = int(input("Enter the SengID for the bed you want to purchase: "))
 
         cursor.execute("UPDATE Seng SET Tilgjengelig = 0 WHERE SengID = ? AND KupeID = ? AND VognID = ?", (seng_id, kupe_id, vogn_id))
+        cursor.execute("INSERT INTO KundeOrdre (Ordre.ID, KundeID, BillettID, Dato, TogruteNavn, AntallBilletter) VALUES (1, ?, 1, ?, ?, ?)", (current_user[0], '2023-04-03', train_route, 1))
         con.commit()
         print("Bed purchased successfully!")
     else:
