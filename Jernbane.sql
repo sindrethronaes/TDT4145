@@ -35,6 +35,7 @@ CREATE TABLE Togrute (
 	"TogruteNavn" TEXT NOT NULL,
 	"Dato" DATE NOT NULL REFERENCES Dato(Dato),
 	"DelstrekningID" INT NOT NULL REFERENCES Delstrekning(DelstrekningID),
+	"KjoeresNaar" TEXT NOT NULL,
 	PRIMARY KEY ("TogruteNavn", "Dato")
 );
 
@@ -143,8 +144,7 @@ CREATE TABLE Billett (
 CREATE TABLE Rutestopp (
     "TogruteNavn" TEXT NOT NULL REFERENCES TogRute(TogRuteNavn),
     "StasjonNavn" TEXT NOT NULL REFERENCES Stasjon(StasjonNavn),
-    "Avgang" TIME,
-    "Ankomst" TIME,
+    "AvgangAnkomst" TIME,
     PRIMARY KEY ("TogruteNavn", "StasjonNavn")
 );
 
