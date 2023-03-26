@@ -1,6 +1,6 @@
 import sqlite3
 from initDB import initDB
-import datetime
+from datetime import date, datetime, timedelta
 from inputFunctions import *
 
 # Creates a connection to our database
@@ -11,6 +11,8 @@ cursor = con.cursor()
 
 # Read SQL script from file
 initDB()
+
+today = date.today()
 
 
 def get_train_routes_by_station_and_day(station_name, day_of_week):
@@ -89,6 +91,72 @@ def get_user_id_by_name_or_phone(name=None, phone=None):
         return result[0]
     else:
         return None
+    
+def purchase_seat(user_id):
+    train_route = input("Enter the train route name: ")
+    vogn_id = int(input("Enter the VognID for the seat you want to purchase: "))
+    sete_id = int(input("Enter the SeteID for the seat you want to purchase: "))
+
+    cursor.execute(
+        "UPDATE Sete SET Tilgjengelig = 0 WHERE SeteID = ? AND VognID = ?", (sete_id, vogn_id))
+    con.commit()
+
+    cursor.execute(
+        "INSERT INTO Billett (VognID, SeteID) VALUES (?, ?)", (vogn_id, sete_id))
+    billett_id = cursor.lastrowid
+    con.commit()
+
+    cursor.execute("INSERT INTO KundeOrdre (BillettID, Dato, TogruteNavn, KundeID, AntallBilletter) VALUES (?, ?, ?, ?, ?)",
+                   (billett_id, today, train_route, user_id, 1))
+    con.commit()
+
+    print("Seat purchased successfully!")
+
+
+def purchase_bed(user_id):
+    train_route = input("Enter the train route name: ")
+    vogn_id = int(input("Enter the VognID for the bed you want to purchase: "))
+    kupe_id = int(input("Enter the KupeID for the bed you want to purchase: "))
+    seng_id = int(input("Enter the SengID for the bed you want to purchase: "))
+
+    cursor.execute(
+        "UPDATE Seng SET Tilgjengelig = 0 WHERE SengID = ? AND KupeID = ? AND VognID = ?", (seng_id, kupe_id, vogn_id))
+    con.commit()
+
+    cursor.execute(
+        "INSERT INTO Billett (VognID, KupeID, SengID) VALUES (?, ?, ?)", (vogn_id, kupe_id, seng_id))
+    billett_id = cursor.lastrowid
+    con.commit()
+
+    cursor.execute("INSERT INTO KundeOrdre (BillettID, Dato, TogruteNavn, KundeID, AntallBilletter) VALUES (?, ?, ?, ?, ?)",
+                   (billett_id, today, train_route, user_id, 1))
+    con.commit()
+
+    print("Bed purchased successfully!")
+
+def check_available_seats(train_route):
+    cursor.execute("""
+    SELECT Vogn.VognID, Sete.SeteID
+    FROM Sete
+    JOIN Vogn ON Sete.VognID = Vogn.VognID
+    WHERE Vogn.TogruteNavn = ? AND Sete.Tilgjengelig = 1
+    """, (train_route,))
+    available_seats = cursor.fetchall()
+    return available_seats
+
+
+def check_available_beds(train_route):
+    cursor.execute("""
+    SELECT Seng.VognID, Seng.KupeID, Seng.SengID
+    FROM Seng
+    JOIN Kupe ON Seng.KupeID = Kupe.KupeID AND Seng.VognID = Kupe.VognID
+    JOIN Vogn ON Seng.VognID = Vogn.VognID
+    WHERE Vogn.TogruteNavn = ? AND Seng.Tilgjengelig = 1
+    """, (train_route,))
+    available_beds = cursor.fetchall()
+    return available_beds
+
+
 
 
 def get_user_by_phone_number(phone_number):
@@ -157,8 +225,8 @@ def check_user_story_d():
     time = get_time()
 
     # Convert date and time to datetime objects
-    date_time = datetime.datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
-    next_day = date_time + datetime.timedelta(days=1)
+    date_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
+    next_day = date_time + timedelta(days=1)
 
     # Search for train routes in the specified date range
     cursor.execute("""
@@ -270,27 +338,14 @@ def check_user_story_g():
     # User is logged in or provided their name and phone number, continue with the ticket purchase process
     # ...
 
-     # Get user input for train route
+    # Get user input for train route
     train_route = input("Enter the train route name: ")
 
     # Query available seats
-    cursor.execute("""
-    SELECT Vogn.VognID, Sete.SeteID
-    FROM Sete
-    JOIN Vogn ON Sete.VognID = Vogn.VognID
-    WHERE Vogn.TogRuteNavn = ? AND Sete.Tilgjengelig = 1
-    """, (train_route,))
-    available_seats = cursor.fetchall()
+    available_seats = check_available_seats(train_route)
 
     # Query available beds
-    cursor.execute("""
-    SELECT Seng.VognID, Seng.KupeID, Seng.SengID
-    FROM Seng
-    JOIN Kupe ON Seng.KupeID = Kupe.KupeID AND Seng.VognID = Kupe.VognID
-    JOIN Vogn ON Seng.VognID = Vogn.VognID
-    WHERE Vogn.TogRuteNavn = ? AND Seng.Tilgjengelig = 1
-    """, (train_route,))
-    available_beds = cursor.fetchall()
+    available_beds = check_available_beds(train_route)
 
     # Print available seats and beds
     print("Available seats:")
@@ -305,32 +360,12 @@ def check_user_story_g():
     ticket_type = input(
         "Enter 'seat' to purchase a seat or 'bed' to purchase a bed: ")
     if ticket_type.lower() == 'seat':
-        vogn_id = int(
-            input("Enter the VognID for the seat you want to purchase: "))
-        sete_id = int(
-            input("Enter the SeteID for the seat you want to purchase: "))
-
-        cursor.execute(
-            "UPDATE Sete SET Tilgjengelig = 0 WHERE SeteID = ? AND VognID = ?", (sete_id, vogn_id))
-        con.commit()
-        print("Seat purchased successfully!")
-
+        purchase_seat(current_user[0])
     elif ticket_type.lower() == 'bed':
-        vogn_id = int(
-            input("Enter the VognID for the bed you want to purchase: "))
-        kupe_id = int(
-            input("Enter the KupeID for the bed you want to purchase: "))
-        seng_id = int(
-            input("Enter the SengID for the bed you want to purchase: "))
-
-        cursor.execute(
-            "UPDATE Seng SET Tilgjengelig = 0 WHERE SengID = ? AND KupeID = ? AND VognID = ?", (seng_id, kupe_id, vogn_id))
-        cursor.execute("INSERT INTO KundeOrdre (Ordre.ID, KundeID, BillettID, Dato, TogruteNavn, AntallBilletter) VALUES (1, ?, 1, ?, ?, ?)",
-                       (current_user[0], '2023-04-03', train_route, 1))
-        con.commit()
-        print("Bed purchased successfully!")
+        purchase_bed(current_user[0])
     else:
         print("Invalid input. Please try again.")
+
 
 
 def check_user_story_h():

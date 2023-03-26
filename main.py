@@ -36,7 +36,6 @@ print("\n")
 check_user_story_f()
 print("\n")
 
-"""
 # Used to test user story g)
 check_user_story_g()
 print("\n")
@@ -45,7 +44,6 @@ print("\n")
 # Used to test user story h)
 check_user_story_h()
 print("\n")
-"""
 
 # Save changes to database
 con.commit()
