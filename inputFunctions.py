@@ -33,3 +33,15 @@ def get_e_mail():
 def get_phone_number():
     phone_number=input("Enter your phone number: ")
     return phone_number
+
+def get_kundeID():
+    kundeID=input("Enter your customer ID: ")
+    return kundeID
+
+def get_number_of_seats():
+    number_of_seats=input("Enter number of seats for the order: ")
+    return number_of_seats
+
+def get_vogntype():
+    vogntype=input("Enter the type of wagon: ")
+    return vogntype

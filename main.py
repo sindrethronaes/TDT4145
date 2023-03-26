@@ -27,9 +27,6 @@ check_user_story_d()
 # Used to test user story e)
 check_user_story_e()
 
-# Used to test user story f)
-check_user_story_f()
-
 # Used to test user story g)
 check_user_story_g()
 

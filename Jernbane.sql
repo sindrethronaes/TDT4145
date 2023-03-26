@@ -73,7 +73,8 @@ CREATE TABLE Vogn (
 	"VognID" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"Navn"	TEXT NOT NULL,
 	"VognType" TEXT NOT NULL,
-	"OperatoerNavn" TEXT NOT NULL REFERENCES Operatoer(OperatoerNavn)
+	"TogRuteNavn" TEXT NOT NULL REFERENCES Togrute(TogRuteNavn),
+	"AntallSolgteBilletter" INT
 );
 
 CREATE TABLE Sovevogn (
@@ -110,7 +111,7 @@ CREATE TABLE Seng (
 CREATE TABLE Sete (
 	"SeteID" INT,
 	"VognID" INT REFERENCES Vogn(VognID),
-	"Tilgjengelig" TEXT NOT NULL,
+	"Tilgjengelig" BOOLEAN NOT NULL,
 	PRIMARY KEY ("SeteID", "VognID")
 );
 
@@ -123,19 +124,21 @@ CREATE TABLE Kunde (
 
 CREATE TABLE KundeOrdre (
 	"OrdreID" TEXT NOT NULL PRIMARY KEY,
+	"BillettID" INT NOT NULL REFERENCES Billett(BillettID),
 	"Dato"	DATE NOT NULL REFERENCES Dato(Dato),
 	"TogruteNavn" TEXT NOT NULL REFERENCES Togrute(TogruteNavn),
-	"KundeID" TEXT NOT NULL REFERENCES Kunde(KundeID)
+	"KundeID" TEXT NOT NULL REFERENCES Kunde(KundeID),
+	"AntallBilletter" INT NOT NULL
 );
 
-CREATE TABLE BillettISittevogn (
-	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"SeteID" TEXT NOT NULL REFERENCES Sete(SeteID)
-);
-
-CREATE TABLE BillettISovevogn (
-	"BillettID" TEXT NOT NULL PRIMARY KEY,
-	"SengID" TEXT NOT NULL REFERENCES Seng(SengID)
+CREATE TABLE Billett (
+    "BillettID" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "VognID" INT NOT NULL,
+    "SeteID" INT,
+    "KupeID" INT,
+    "SengID" INT,
+    FOREIGN KEY ("VognID", "SeteID") REFERENCES Sete("VognID", "SeteID"),
+    FOREIGN KEY ("VognID", "KupeID", "SengID") REFERENCES Seng("VognID", "KupeID", "SengID")
 );
 
 CREATE TABLE Rutestopp (
